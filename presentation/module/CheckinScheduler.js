@@ -17,7 +17,7 @@ export class CheckInScheduler {
             let hourNow = new Date().getHours()
             if (time !== hourNow) return
             
-            hoyoRepository.checkInAllUser(callback) 
+            hoyoRepository.checkInAllUser(callback)
         }, 2000) //3600000
     }
 

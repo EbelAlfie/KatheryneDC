@@ -50,11 +50,11 @@ class CheckInCommand extends BaseCommand {
 
         interaction.reply("Sukses yaa")
 
-        hoyoRepository.startReminder(
+        this.checkInScheduler.startReminder(
             time,
             {
                 onSuccess: result => this.sendCheckInMessage(result, interaction),
-                onFailed: error => this.handleError(error, interaction)
+                onError: error => this.handleError(error, interaction)
             }
         )
     }

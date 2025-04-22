@@ -8,7 +8,7 @@ class HoyolabRepository {
     /** Public */
     async registerUser(userModel) {
         if (localApi.existingUser(userModel.email)) 
-            Promise.reject("User already exist")
+            throw Error("User already exist")
 
         return onlineApi.login(userModel)
             .then(response => {
@@ -34,11 +34,10 @@ class HoyolabRepository {
         const {
             retcode = 0,
             headers = {},
-        } = result.data ?? {}
+        } = result ?? {}
 
         switch(retcode) {
             case ResponseSuccess : {
-                console.log(headers)
                 let cookies = headers.get("set-cookie")
                 if (cookies !== undefined) {
                     localApi.storeUser(email, cookies)
