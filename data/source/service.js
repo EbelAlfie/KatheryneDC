@@ -72,8 +72,5 @@ export async function checkIn(cookies) {
       { 
         headers: headers 
       }
-    ).then(result => {
-      console.log(result)
-      return result
-    })
+    )
 }

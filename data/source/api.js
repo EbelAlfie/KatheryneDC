@@ -2,6 +2,7 @@ import { checkIn, login } from "./service.js"
 import 'dotenv/config'
 import { env } from 'node:process'
 import { encryptWithPublicKey } from "../util.js"
+import { ResponseSuccess, UnknownError } from "../../domain/CheckInResCode.js"
 
 class Api {
     key = null
@@ -12,8 +13,17 @@ class Api {
 
     #initApi() {}
 
-    checkIn(cookie) {
+    async checkIn(cookie) {
         return checkIn(cookie)
+        .then(response => {
+            console.log(response.data)
+            let body = response.data
+            return {
+                data: body?.data ?? null,
+                message: body?.message ?? "",
+                retcode: body?.retcode ?? null
+            }
+        })
     }
 
     async login(user) {
@@ -35,6 +45,17 @@ class Api {
         }
         
         return login(newRequest)
+            .then(response => { //maping response
+                let body = response.data
+                let result = {
+                    data: body?.data ?? null,
+                    message: body?.message ?? "",
+                    retcode: body?.retcode ?? UnknownError,
+                    headers: response?.headers
+                }
+                if (result.retcode == ResponseSuccess) return result
+                else throw Error(result.message)
+            })
     }
 
 }

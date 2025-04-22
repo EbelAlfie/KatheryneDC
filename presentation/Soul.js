@@ -28,7 +28,7 @@ export class Soul {
     async #registerCommand(client) {
         client.commands = new Collection()
 
-        const foldersPath = join(__dirname, 'commands')
+        const foldersPath = join(import.meta.dirname, 'commands')
         const commandFolders = readdirSync(foldersPath)
 
         let commands = []

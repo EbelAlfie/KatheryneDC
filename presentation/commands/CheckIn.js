@@ -1,18 +1,20 @@
 import { SlashCommandBuilder } from "discord.js"
 import { NoUserError, ResponseSuccess } from "../../domain/CheckInResCode.js"
 import BaseCommand from "../models/BaseCommand.js"
-import { hoyoRepository } from "../../data/HoyolabRepository.js"
 import * as register from "./Register.js"
 import { TimeSpinner } from "../components/selection.js"
 import { eventBus } from "../models/EventBus.js"
+import { CheckInScheduler } from "../module/CheckinScheduler.js"
 
 class CheckInCommand extends BaseCommand {
+    checkInScheduler = new CheckInScheduler()
+
     data = new SlashCommandBuilder()
         .setName("checkin")
         .setDescription("Schedule a checkin to hoyolab")
         
     async execute(interaction) {
-        if (hoyoRepository.noUserExist()) 
+        if (!this.checkInScheduler.isAnyUserRegistered()) 
             this.handleError(NoUserError, interaction)
         else    
             this.#showTimeSpinner(interaction)
@@ -44,7 +46,7 @@ class CheckInCommand extends BaseCommand {
     }
 
     onTimeSelected(interaction) {
-        const time = interaction.values[0]
+        const time = interaction.values[0] ?? "00:00"
 
         interaction.reply("Sukses yaa")
 
