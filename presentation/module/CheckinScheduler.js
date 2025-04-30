@@ -18,7 +18,7 @@ export class CheckInScheduler {
             if (time !== hourNow) return
             
             hoyoRepository.checkInAllUser(callback)
-        }, 2000) //3600000
+        }, 3600000) //3600000
     }
 
     isAnyUserRegistered() { // True if it has user, false if user is empty
