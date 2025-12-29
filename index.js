@@ -14,7 +14,10 @@ const client = new Client({ intents: [
 
 const ayaka = new Soul();
 
-client.once(Events.ClientReady, () => ayaka.onReady(client)) ;
+client.once(Events.ClientReady, () => {
+    client.channels.fetch
+    ayaka.onReady(client)
+}) ;
 
 client.on(Events.MessageCreate, interaction => {
     ayaka.reply(interaction)

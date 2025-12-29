@@ -46,8 +46,22 @@ export async function login(requestBody) {
 
 
 export async function checkIn(cookies) {
-    const headers = { 
-      'accept': 'application/json, text/plain, /', 
+    const headers = getDefaultHeader() + {
+      'Cookie': cookies
+    }
+
+    return axios.post(
+      "https://sg-hk4e-api.hoyolab.com/event/sol/sign?lang=en-us", 
+      {"act_id":"e202102251931481"},
+      { 
+        headers: headers 
+      }
+    )
+}
+
+function getDefaultHeader() {
+  return {
+    'accept': 'application/json, text/plain, /', 
       'accept-language': 'en-US,en;q=0.9,id;q=0.8', 
       'content-type': 'application/json;charset=UTF-8', 
       'origin': 'https://act.hoyolab.com', 
@@ -62,15 +76,6 @@ export async function checkIn(cookies) {
       'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 Edg/128.0.0.0', 
       'x-rpc-app_version': '', 
       'x-rpc-device_name': '', 
-      'x-rpc-platform': '4', 
-      'Cookie': cookies
-    }
-
-    return axios.post(
-      "https://sg-hk4e-api.hoyolab.com/event/sol/sign?lang=en-us", 
-      {"act_id":"e202102251931481"},
-      { 
-        headers: headers 
-      }
-    )
+      'x-rpc-platform': '4'
+  }
 }
