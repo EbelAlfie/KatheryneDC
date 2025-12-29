@@ -2,6 +2,7 @@ class Local {
     userData = new Map() //Pair of email and cookies
 
     constructor() {
+        // Sample this.userData.set("johndoe@gmail.com", ["token=goblog", "token=anjing"])
     }
 
     allUsers() {

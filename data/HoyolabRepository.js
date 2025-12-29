@@ -23,8 +23,12 @@ class HoyolabRepository {
     checkInAllUser(callback) {
         let userData = localApi.allUsers()
         userData.forEach(item => {
+            console.log("Checking in")
             onlineApi.checkIn(item.join("; "))
-            .then(result => callback.onSuccess(result))
+            .then(result => {
+                console.log("Checkin success")
+                callback.onSuccess(result)
+            })
             .catch(error => callback.onError(error))
         })
     }

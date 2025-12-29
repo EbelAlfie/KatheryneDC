@@ -32,11 +32,11 @@ export async function login(requestBody) {
   }
 
   return axios.post(
-    "https://sg-public-api.hoyolab.com/account/ma-passport/api/webLoginByPassword", 
+    "https://passport-api-sg.hoyolab.com/account/ma-passport/api/webLoginByPassword", 
     {
       "account": requestBody.account,
       "password": requestBody.password,
-      "token_type": 2
+      "token_type": 6
     },
     { 
       headers: headers 
