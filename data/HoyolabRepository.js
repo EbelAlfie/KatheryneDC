@@ -6,13 +6,13 @@ class HoyolabRepository {
     constructor() {}
 
     /** Public */
-    async registerUser(userModel) {
-        if (localApi.existingUser(userModel.email)) 
+    async registerUser(senderId, userModel) {
+        if (localApi.isUserExist(senderId)) 
             throw Error("User already exist")
 
         return onlineApi.login(userModel)
             .then(response => {
-                this.#saveUserToLocal(response, userModel.email)
+                this.#saveUserToLocal(response, senderId, userModel)
             })
     }
 
@@ -34,7 +34,7 @@ class HoyolabRepository {
     }
 
     /** Privates */
-    #saveUserToLocal(result, email) {
+    #saveUserToLocal(result, discordId, userModel) {
         const {
             retcode = 0,
             headers = {},
@@ -44,7 +44,8 @@ class HoyolabRepository {
             case ResponseSuccess : {
                 let cookies = headers.get("set-cookie")
                 if (cookies !== undefined) {
-                    localApi.storeUser(email, cookies)
+                    let localUserModel = localUserModel(discordId, userModel, cookies)
+                    localApi.storeUser(discordId, userModel, cookies)
                     Promise.resolve()
                 } else 
                     Promise.reject("No cookie :(")

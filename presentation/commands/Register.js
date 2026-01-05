@@ -4,6 +4,7 @@ import { LoginModalBuilder } from "../components/modals.js"
 import { hoyoRepository } from "../../data/HoyolabRepository.js"
 import BaseCommand from "../models/BaseCommand.js"
 import { eventBus } from "../models/EventBus.js"
+import { loginRequest } from "../../domain/Request.js"
 
 /** A slash command to register users to hoyolab api */
 class RegisterCommand extends BaseCommand {
@@ -38,12 +39,10 @@ class RegisterCommand extends BaseCommand {
         let password = fields.fields.get("password")
         if (isModalError(password.value, interaction)) return 
         
-        const request = {
-            email: email.value,
-            password: password.value
-        }
+        const senderId = interaction.user.id
+        const request = loginRequest(email, password)
 
-        hoyoRepository.registerUser(request)
+        hoyoRepository.registerUser(senderId, request)
             .then(_ => this.#onRegistrationSuccess(interaction))
             .catch(error => this.#onRegistrationFailed(interaction, error))
     }

@@ -1,5 +1,5 @@
 class Local {
-    userData = new Map() //Pair of email and cookies
+    userData = [] //Pair of email and cookies
 
     constructor() {
         // Sample this.userData.set("johndoe@gmail.com", ["token=goblog", "token=anjing"])
@@ -13,12 +13,12 @@ class Local {
         return this.userData.size <= 0
     }
 
-    existingUser(email) {
-        return this.userData.has(email)
+    isUserExist(discordId) {
+        return this.userData.find((value, index) => value.userDiscordId == discordId) != undefined
     }
 
-    storeUser(email, cookie) {
-        this.userData.set(email, cookie)
+    storeUser(newUser) {
+        this.userData.concat(newUser)
     }
 }
 
