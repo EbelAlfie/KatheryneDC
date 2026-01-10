@@ -3,11 +3,11 @@ import { isModalError } from "../utils.js"
 import { LoginModalBuilder } from "../components/modals.js"
 import { hoyoRepository } from "../../data/HoyolabRepository.js"
 import BaseCommand from "../models/BaseCommand.js"
-import { eventBus } from "../models/EventBus.js"
 import { loginRequest } from "../../domain/Request.js"
 
 /** A slash command to register users to hoyolab api */
-class RegisterCommand extends BaseCommand {
+export class RegisterCommand extends BaseCommand {
+
     data = new SlashCommandBuilder()
         .setName("register")
         .setDescription("Command to register new user to hoyolab")
@@ -21,13 +21,7 @@ class RegisterCommand extends BaseCommand {
     }
 
     #showRegisterModal(interaction) {
-        const modal = new LoginModalBuilder()
-
-        eventBus.registerEvent(
-            LoginModalBuilder.componentId, 
-            this.onRegisterModalSubmitted.bind(this)
-        )
-        
+        const modal = new LoginModalBuilder() 
         interaction.showModal(modal.createComponent())
     }
 
@@ -55,5 +49,3 @@ class RegisterCommand extends BaseCommand {
         interaction.reply(error.message)
     }
 }
-
-export const command = new RegisterCommand()

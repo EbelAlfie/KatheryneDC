@@ -1,4 +1,5 @@
-import { NoUserError, ResponseSuccess } from "../domain/CheckInResCode.js"
+import { ResponseSuccess } from "../domain/CheckInResCode.js"
+import { newTask, TaskType } from "../domain/Task.js"
 import onlineApi from "./source/api.js"
 import localApi from "./source/local.js"
 
@@ -20,17 +21,13 @@ class HoyolabRepository {
         return !localApi.isUserListEmpty()
     }
 
-    checkInAllUser(callback) {
-        let userData = localApi.allUsers()
-        userData.forEach(item => {
-            console.log("Checking in")
-            onlineApi.checkIn(item.join("; "))
-            .then(result => {
-                console.log("Checkin success")
-                callback.onSuccess(result)
-            })
-            .catch(error => callback.onError(error))
+    async checkInAllUser() {
+        return onlineApi.checkIn(item.join("; "))
+        .then(result => {
+            console.log("Checkin success")
+            callback.onSuccess(result)
         })
+        .catch(error => callback.onError(error))
     }
 
     /** Privates */
@@ -46,6 +43,20 @@ class HoyolabRepository {
                 if (cookies !== undefined) {
                     let localUserModel = localUserModel(discordId, userModel, cookies)
                     localApi.storeUser(discordId, userModel, cookies)
+                    localApi.addTask(
+                        newTask(
+                            userModel,
+                            TaskType.CHECK_IN,
+                            Date.now()
+                        )
+                    )
+                    localApi.addTask(
+                        newTask(
+                            userModel,
+                            TaskType.DAILY,
+                            Date.now()
+                        )
+                    )
                     Promise.resolve()
                 } else 
                     Promise.reject("No cookie :(")

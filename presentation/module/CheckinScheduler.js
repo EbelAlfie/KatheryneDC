@@ -1,23 +1,41 @@
 import { hoyoRepository } from "../../data/HoyolabRepository.js"
+import localApi from "../../data/source/local.js"
+import { newTask, TaskType } from "../../domain/Task.js"
 
 export class CheckInScheduler {
+    discordClient = null 
     timerId = "check_in"
     scheduler = null
-    lastCheckin = null
+
+    setClient(client) { 
+        this.discordClient = client
+    }
 
     /** Public */
-    startReminder(checkInTime, callback) {
+    startReminder() {
         if (this.scheduler) return 
 
         this.scheduler = setInterval(async () => {
-            const now = new Date()
-            const hour = now.getHours()
-            const today = now.toDateString()
-            if (hour !== 1 || lastCheckin == today) return
-            this.lastCheckin = today
+            const dueTasks = localApi.getTask()
+            
+            for (task in dueTasks) {
 
-            hoyoRepository.checkInAllUser(callback)
-        }, 3600000) //3600000
+                switch (task.type) {
+                    case TaskType.CHECK_IN:
+                        hoyoRepository.checkInAllUser()
+                        localApi.removeTask(task)
+                        localApi.addTask(
+                            newTask(
+                                task.userModel,
+                                task.type,
+                                //Date() jam 1 
+                            )
+                        )
+                    default:
+                        break;
+                }
+            }
+        }, 3600000)
     }
 
     stopReminder() {
@@ -26,7 +44,8 @@ export class CheckInScheduler {
         this.scheduler = null
     }
 
-    isAnyUserRegistered() { // True if it has user, false if user is empty
+    // True if it has user, false if user is empty
+    isAnyUserRegistered() { 
         return hoyoRepository.hasUser()
     }
 }

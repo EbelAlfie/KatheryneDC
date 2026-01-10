@@ -6,7 +6,7 @@ import { TimeSpinner } from "../components/selection.js"
 import { eventBus } from "../models/EventBus.js"
 import { hoyoRepository } from "../../data/HoyolabRepository.js"
 
-class CheckInCommand extends BaseCommand {
+export class CheckInCommand extends BaseCommand {
     data = new SlashCommandBuilder()
         .setName("checkin")
         .setDescription("Schedule a checkin to hoyolab")
@@ -72,5 +72,3 @@ class CheckInCommand extends BaseCommand {
         interaction.channel.send(message)
     }
 }
-
-export const command = new CheckInCommand()

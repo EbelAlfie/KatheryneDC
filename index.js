@@ -4,6 +4,7 @@ import 'dotenv/config'
 import { env } from 'node:process'
 
 const ayakaDiscord = env.AYAKA_DC_TOKEN
+
 const client = new Client({ intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
