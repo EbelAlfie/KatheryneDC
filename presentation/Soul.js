@@ -1,16 +1,21 @@
-import { CheckInScheduler } from "./module/CheckinScheduler.js";
+import { MainScheduler } from "./module/MainScheduler.js";
 import { CommandModule } from "./module/CommandModule.js";
+import { hoyoRepository } from "../data/HoyolabRepository.js";
 
 export class Soul {
     command = new CommandModule()
-    scheduler = new CheckInScheduler()
+    scheduler = new MainScheduler()
     
     /** Called when the bot has logged in */
     onReady(client) {
         //this.#setIdentity(client)
         console.log(`Logged in as ${client.user.tag}`) ;
         this.registerCommandV2(client)
-        this.scheduler.setClient(client)
+        this.scheduler.init({
+            client: client,
+            hoyoRepository: hoyoRepository
+        })
+        this.scheduler.start()
     }
 
     #setIdentity(client) {
@@ -30,7 +35,7 @@ export class Soul {
     }
 
     /** Command handler */
-    async command(interaction) {
+    async onCommand(interaction) {
         this.command.handleCommand(interaction)
     }
 

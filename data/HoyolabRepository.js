@@ -1,5 +1,5 @@
 import { ResponseSuccess } from "../domain/CheckInResCode.js"
-import { newTask, TaskType } from "../domain/Task.js"
+import { newTask, TaskType } from "../domain/task/Task.js"
 import onlineApi from "./source/api.js"
 import localApi from "./source/local.js"
 
@@ -21,13 +21,8 @@ class HoyolabRepository {
         return !localApi.isUserListEmpty()
     }
 
-    async checkInAllUser() {
+    async checkInAllUser(item) {
         return onlineApi.checkIn(item.join("; "))
-        .then(result => {
-            console.log("Checkin success")
-            callback.onSuccess(result)
-        })
-        .catch(error => callback.onError(error))
     }
 
     /** Privates */

@@ -3,7 +3,6 @@ import { NoUserError, ResponseSuccess } from "../../domain/CheckInResCode.js"
 import BaseCommand from "../models/BaseCommand.js"
 import * as register from "./Register.js"
 import { TimeSpinner } from "../components/selection.js"
-import { eventBus } from "../models/EventBus.js"
 import { hoyoRepository } from "../../data/HoyolabRepository.js"
 
 export class CheckInCommand extends BaseCommand {
@@ -37,12 +36,6 @@ export class CheckInCommand extends BaseCommand {
 
     #showTimeSpinner(interaction) {
         const time = new TimeSpinner()
-
-        eventBus.registerEvent(
-            TimeSpinner.componentId, 
-            this.onTimeSelected.bind(this)
-        )
-
         interaction.reply({
             components: [time.createComponent()]
         })

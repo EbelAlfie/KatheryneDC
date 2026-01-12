@@ -25,7 +25,7 @@ client.on(Events.MessageCreate, interaction => {
 }) ;
 
 client.on(Events.InteractionCreate, interaction => {
-    ayaka.command(interaction)
+    ayaka.onCommand(interaction)
 })
 
 console.log("Logging in...") ;

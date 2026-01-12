@@ -53,6 +53,7 @@ class Api {
                     retcode: body?.retcode ?? UnknownError,
                     headers: response?.headers
                 }
+                console.log(result)
                 if (result.retcode == ResponseSuccess) return result
                 else throw Error(result.message)
             })

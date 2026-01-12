@@ -1,6 +1,8 @@
 import { REST, Routes, Collection } from "discord.js";
-import { RegisterCommand } from "../commands/Register";
-import { CheckInCommand } from "../commands/CheckIn";
+import { RegisterCommand } from "../commands/Register.js";
+import { CheckInCommand } from "../commands/CheckIn.js";
+import BaseCommand from "../models/BaseCommand.js";
+import { LoginModalBuilder } from "../components/modals.js";
 
 export class CommandModule {
     slashCommand = [
@@ -12,7 +14,7 @@ export class CommandModule {
         client.commands = new Collection()
         let commands = []
 
-        for (const command of slashCommand) {
+        for (const command of this.slashCommand) {
             if (command instanceof BaseCommand) {
                 client.commands.set(command.data.name, command)
                 commands.push(command.data.toJSON())
@@ -35,6 +37,8 @@ export class CommandModule {
 
     async handleCommand(interaction) {
         if (interaction.isChatInputCommand()) this.#handleChatCommand(interaction)
+
+        if (interaction.customId === LoginModalBuilder.componentId) this.slashCommand[0].onRegisterModalSubmitted(interaction)
     }
 
     async #handleChatCommand(interaction) {
