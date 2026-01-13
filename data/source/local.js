@@ -27,12 +27,14 @@ export class Local {
         this.task.push(newTask)
     }
 
-    removeTask() {
-        this.task = this.task.filter((value) => value.date > Date.now())
+    removeTask(param) {
+        const { time = Date.now() } = param
+        this.task = this.task.filter((value) => value.date > time)
     }
 
-    getTask() {
-        const selectedTasks = this.task.filter(value => value.date <= Date.now())
+    getTask(param) {
+        const { by = Date.now() } = param
+        const selectedTasks = this.task.filter(value => value.date <= by)
         return selectedTasks
     }
 }

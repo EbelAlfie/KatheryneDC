@@ -3,7 +3,6 @@ import { isModalError } from "../utils.js"
 import { LoginModalBuilder } from "../components/modals.js"
 import BaseCommand from "../models/BaseCommand.js"
 import { loginRequest } from "../../domain/model/Request.js"
-import { provideUserService } from "../../dependencyProviders.js"
 
 /** A slash command to register users to hoyolab api */
 export class RegisterCommand extends BaseCommand {
@@ -12,7 +11,7 @@ export class RegisterCommand extends BaseCommand {
     constructor(config) { 
         super()
         const { 
-            userService = provideUserService()
+            userService
         } = config
         this.userService = userService
     }

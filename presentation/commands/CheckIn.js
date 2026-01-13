@@ -3,7 +3,6 @@ import BaseCommand from "../models/BaseCommand.js"
 import * as register from "./Register.js"
 import { TimeSpinner } from "../components/selection.js"
 import { HoyoResponseCode } from "../../domain/model/HoyoResponseCodes.js"
-import { provideUserService } from "../../dependencyProviders.js"
 
 export class CheckInCommand extends BaseCommand {
     userService
@@ -11,7 +10,7 @@ export class CheckInCommand extends BaseCommand {
     constructor(config) { 
         super()
         const { 
-            userService = provideUserService()
+            userService
         } = config
         this.userService = userService
     }

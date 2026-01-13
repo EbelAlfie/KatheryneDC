@@ -1,9 +1,27 @@
 import { MainScheduler } from "./module/MainScheduler.js";
 import { CommandModule } from "./module/CommandModule.js";
 import { HoyolabRepository } from "../data/HoyolabRepository.js";
+import { TaskRepository } from "../data/TaskRepository.js";
+import { Local } from "../data/source/local.js";
+import { UserService } from "../domain/services/UserService.js";
+import { UserRepository } from "../data/UserRepository.js";
 
 export class Soul {
-    command = new CommandModule()
+    //TODO DI?
+    localApi = new Local()
+
+    hoyoRepository = new HoyolabRepository()
+    userRepository = new UserRepository({
+        localApi: this.localApi
+    })
+    taskRepository = new TaskRepository({ localApi: this.localApi })
+
+    userService = new UserService({
+        hoyoRepository: this.hoyoRepository,
+        userRepository: this.userRepository
+    })
+
+    command = new CommandModule({ userService: this.userService })
     scheduler = new MainScheduler()
     
     /** Called when the bot has logged in */
@@ -12,8 +30,9 @@ export class Soul {
         console.log(`Logged in as ${client.user.tag}`) ;
         this.registerCommandV2(client)
         this.scheduler.init({
-            client: client,
-            hoyoRepository: new HoyolabRepository()//TODO
+            discordClient: client,
+            hoyoRepository: this.hoyoRepository, 
+            taskRepository: this.taskRepository
         })
         this.scheduler.start()
     }

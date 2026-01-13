@@ -1,6 +1,6 @@
 import { HoyoResponseCode } from "../domain/model/HoyoResponseCodes.js"
 import { localUserModel } from "../domain/model/Models.js"
-import { newTask, TaskType } from "../domain/task/Task.js"
+import { newTask, TaskType } from "../domain/model/Task.js"
 
 export class UserRepository { 
     localApi

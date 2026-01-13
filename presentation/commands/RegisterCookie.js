@@ -1,6 +1,5 @@
 import { SlashCommandBuilder, SlashCommandStringOption } from "discord.js";
 import BaseCommand from "../models/BaseCommand.js";
-import { provideUserService } from "../../dependencyProviders.js";
 
 export class RegisterCookie extends BaseCommand {
     OPTION_COOKIE = "cookie_value"
@@ -10,7 +9,7 @@ export class RegisterCookie extends BaseCommand {
     constructor(config) { 
         super()
         const { 
-            userService = provideUserService()
+            userService
         } = config
         this.userService = userService
     }

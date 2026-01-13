@@ -39,8 +39,7 @@ export class HoyolabRepository {
             })
     }
 
-    async checkInAllUser(cookieList) {
-        const cookie = cookieList.join("; ")
+    async checkIn(cookie) {
         return checkIn(cookie)
         .then(response => {
             console.log(response.data)
