@@ -3,11 +3,17 @@ import { RegisterCommand } from "../commands/Register.js";
 import { CheckInCommand } from "../commands/CheckIn.js";
 import BaseCommand from "../models/BaseCommand.js";
 import { LoginModalBuilder } from "../components/modals.js";
+import { RegisterCookie } from "../commands/RegisterCookie.js";
+import { UserService } from "../../domain/services/UserService.js";
+import { provideUserService } from "../../dependencyProviders.js";
 
 export class CommandModule {
+    userService = provideUserService()
+
     slashCommand = [
-        new RegisterCommand(),
-        new CheckInCommand()
+        new RegisterCommand({ userService: this.userService }),
+        new CheckInCommand({ userService: this.userService }),
+        new RegisterCookie({ userService: this.userService })
     ]
 
     registerCommands(client) {

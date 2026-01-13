@@ -1,13 +1,11 @@
 import nodeCron from "node-cron"
-import { hoyoRepository } from "../../data/HoyolabRepository.js"
-import localApi from "../../data/source/local.js"
 import { CheckInTask } from "../../domain/task/CheckinTask.js"
 import { newTask, TaskType } from "../../domain/task/Task.js"
 
 export class MainScheduler {
-    discordClient = null 
-    hoyoRepository = null
-    checkin = null
+    discordClient
+    hoyoRepository
+    checkin
     
     scheduler = null
 

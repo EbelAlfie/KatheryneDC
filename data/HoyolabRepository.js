@@ -1,66 +1,55 @@
-import { ResponseSuccess } from "../domain/CheckInResCode.js"
-import { newTask, TaskType } from "../domain/task/Task.js"
-import onlineApi from "./source/api.js"
-import localApi from "./source/local.js"
+import 'dotenv/config'
+import { env } from 'node:process'
+import { checkIn, login } from "./source/api.js"
+import { encryptWithPublicKey } from "./util.js"
+import { createHoyoError } from "../domain/model/Errors.js"
+import { HoyoResponseCode } from "../domain/model/HoyoResponseCodes.js"
 
-class HoyolabRepository {
-    constructor() {}
+export class HoyolabRepository {
+    async registerUser(user) {
+        const publicKey = env.MIHOYO_ENCRYPTION_KEY
+        const encryptedEmail = encryptWithPublicKey({
+            message: user.email,
+            publicKey: publicKey
+        })
 
-    /** Public */
-    async registerUser(senderId, userModel) {
-        if (localApi.isUserExist(senderId)) 
-            throw Error("User already exist")
+        const encryptedPass = encryptWithPublicKey({
+            message: user.password,
+            publicKey: publicKey
+        })
 
-        return onlineApi.login(userModel)
+        let newRequest = {
+            account: encryptedEmail||"",
+            password: encryptedPass||"",
+            tokenType: 2
+        }
+        
+        return login(newRequest)
             .then(response => {
-                this.#saveUserToLocal(response, senderId, userModel)
+                let body = response.data
+                let result = {
+                    data: body?.data ?? null,
+                    message: body?.message ?? "",
+                    retcode: body?.retcode ?? HoyoResponseCode.UnknownError,
+                    headers: response?.headers
+                }
+                console.log(result)
+                if (result.retcode == HoyoResponseCode.ResponseSuccess) return result
+                else throw createHoyoError(body)
             })
     }
 
-    hasUser() {
-        return !localApi.isUserListEmpty()
-    }
-
-    async checkInAllUser(item) {
-        return onlineApi.checkIn(item.join("; "))
-    }
-
-    /** Privates */
-    #saveUserToLocal(result, discordId, userModel) {
-        const {
-            retcode = 0,
-            headers = {},
-        } = result ?? {}
-
-        switch(retcode) {
-            case ResponseSuccess : {
-                let cookies = headers.get("set-cookie")
-                if (cookies !== undefined) {
-                    let localUserModel = localUserModel(discordId, userModel, cookies)
-                    localApi.storeUser(discordId, userModel, cookies)
-                    localApi.addTask(
-                        newTask(
-                            userModel,
-                            TaskType.CHECK_IN,
-                            Date.now()
-                        )
-                    )
-                    localApi.addTask(
-                        newTask(
-                            userModel,
-                            TaskType.DAILY,
-                            Date.now()
-                        )
-                    )
-                    Promise.resolve()
-                } else 
-                    Promise.reject("No cookie :(")
-                break
+    async checkInAllUser(cookieList) {
+        const cookie = cookieList.join("; ")
+        return checkIn(cookie)
+        .then(response => {
+            console.log(response.data)
+            let body = response.data
+            return {
+                data: body?.data ?? null,
+                message: body?.message ?? "",
+                retcode: body?.retcode ?? null
             }
-            default: 
-                Promise.reject(result.message)
-        }
+        })
     }
 }
-
-export const hoyoRepository = new HoyolabRepository()

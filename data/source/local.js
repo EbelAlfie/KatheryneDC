@@ -1,4 +1,4 @@
-class Local {
+export class Local {
     userData = [] //Pair of email and cookies
 
     task = []
@@ -36,6 +36,3 @@ class Local {
         return selectedTasks
     }
 }
-
-let localApi = new Local() 
-export default localApi

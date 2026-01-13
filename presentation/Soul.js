@@ -1,6 +1,6 @@
 import { MainScheduler } from "./module/MainScheduler.js";
 import { CommandModule } from "./module/CommandModule.js";
-import { hoyoRepository } from "../data/HoyolabRepository.js";
+import { HoyolabRepository } from "../data/HoyolabRepository.js";
 
 export class Soul {
     command = new CommandModule()
@@ -13,7 +13,7 @@ export class Soul {
         this.registerCommandV2(client)
         this.scheduler.init({
             client: client,
-            hoyoRepository: hoyoRepository
+            hoyoRepository: new HoyolabRepository()//TODO
         })
         this.scheduler.start()
     }

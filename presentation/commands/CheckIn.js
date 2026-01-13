@@ -1,18 +1,28 @@
 import { SlashCommandBuilder } from "discord.js"
-import { NoUserError, ResponseSuccess } from "../../domain/CheckInResCode.js"
 import BaseCommand from "../models/BaseCommand.js"
 import * as register from "./Register.js"
 import { TimeSpinner } from "../components/selection.js"
-import { hoyoRepository } from "../../data/HoyolabRepository.js"
+import { HoyoResponseCode } from "../../domain/model/HoyoResponseCodes.js"
+import { provideUserService } from "../../dependencyProviders.js"
 
 export class CheckInCommand extends BaseCommand {
+    userService
+    
+    constructor(config) { 
+        super()
+        const { 
+            userService = provideUserService()
+        } = config
+        this.userService = userService
+    }
+
     data = new SlashCommandBuilder()
         .setName("checkin")
         .setDescription("Schedule a checkin to hoyolab")
         
     async execute(interaction) {
         if (!this.checkInScheduler.isAnyUserRegistered()) 
-            this.handleError(NoUserError, interaction)
+            this.handleError(HoyoResponseCode.NoUserError, interaction)
         else    
             hoyoRepository.checkInAllUser(
                 {
@@ -57,7 +67,7 @@ export class CheckInCommand extends BaseCommand {
     
     sendCheckInMessage(result, interaction) {
         let message = "Yahh gagal checkin"
-        if (result.retcode != ResponseSuccess)
+        if (result.retcode != HoyoResponseCode.ResponseSuccess)
             message = result.data.message
         else 
             message = "Sukses check in ya, traveler"

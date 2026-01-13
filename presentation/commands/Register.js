@@ -1,12 +1,21 @@
 import { SlashCommandBuilder } from "discord.js"
 import { isModalError } from "../utils.js"
 import { LoginModalBuilder } from "../components/modals.js"
-import { hoyoRepository } from "../../data/HoyolabRepository.js"
 import BaseCommand from "../models/BaseCommand.js"
-import { loginRequest } from "../../domain/Request.js"
+import { loginRequest } from "../../domain/model/Request.js"
+import { provideUserService } from "../../dependencyProviders.js"
 
 /** A slash command to register users to hoyolab api */
 export class RegisterCommand extends BaseCommand {
+    userService
+
+    constructor(config) { 
+        super()
+        const { 
+            userService = provideUserService()
+        } = config
+        this.userService = userService
+    }
 
     data = new SlashCommandBuilder()
         .setName("register")
@@ -36,7 +45,7 @@ export class RegisterCommand extends BaseCommand {
         const senderId = interaction.user.id
         const request = loginRequest(email, password)
 
-        hoyoRepository.registerUser(senderId, request)
+        this.service.registerUser(senderId, request)
             .then(_ => this.#onRegistrationSuccess(interaction))
             .catch(error => this.#onRegistrationFailed(interaction, error))
     }
