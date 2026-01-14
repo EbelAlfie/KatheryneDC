@@ -1,3 +1,5 @@
+import { HoyoResponseCode } from "../../domain/model/StatusCode.js";
+import { newTask } from "../../domain/model/Task.js";
 import { getTomorrow } from "../utils.js";
 
 export class CheckInTask {
@@ -28,11 +30,21 @@ export class CheckInTask {
                 )
             )
         } catch(error) { 
+            let scheduleTime = Date.now
+            switch(error.retcode) {
+                case HoyoResponseCode.AlreadyCheckIn:
+                    scheduleTime = this.calculateNextExec()
+                    break
+                case HoyoResponseCode.NotLoggedIn:
+                    return
+                default:
+                    scheduleTime = Date.now()
+            }
             this.taskRepository.addTask(
                 newTask(
                     task.userModel,
                     task.type,
-                    Date.now()
+                    scheduleTime
                 )
             )
         }
@@ -41,6 +53,6 @@ export class CheckInTask {
     calculateNextExec() {
         const tomorrow = getTomorrow()
         tomorrow.setHours(1, 0, 0, 0)
-        return tomorrow
+        return tomorrow.getTime()  
     }
 }

@@ -1,4 +1,4 @@
-import { HoyoResponseCode } from "../domain/model/HoyoResponseCodes.js"
+import { HoyoResponseCode } from "../domain/model/StatusCode.js"
 import { localUserModel } from "../domain/model/Models.js"
 import { newTask, TaskType } from "../domain/model/Task.js"
 

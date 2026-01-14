@@ -1,15 +1,14 @@
-import { HoyoResponseCode } from "./HoyoResponseCodes.js"
+import { HoyoResponseCode, StatusCodes } from "./StatusCode.js"
 
 export function createHoyoError(response) {
     const {
-        retcode = HoyoResponseCode.UnknownError, 
+        retcode = StatusCodes.UnknownError, 
         message = ""
     } = response
 
     const errorMessages = {
-        [HoyoResponseCode.UnknownError]: "Yahh, checkin gagal :(",
+        [StatusCodes.UnknownError]: "Yahh, checkin gagal :(",
         [HoyoResponseCode.AlreadyCheckIn]: "Sudah checkin hari ini",
-        [HoyoResponseCode.NoUserError]: "Ga ada user",
         [HoyoResponseCode.NotLoggedIn]: "Belum log in",
     }
 

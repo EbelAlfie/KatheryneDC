@@ -49,9 +49,12 @@ export async function login(requestBody) {
 
 
 export async function checkIn(cookies) {
-    const headers = getDefaultHeader() + {
-      'Cookie': cookies
-    }
+    const headers = Object.assign(
+      getDefaultHeader(), 
+      {
+        'Cookie': cookies
+      }
+    )
 
     return axios.post(
       "https://sg-hk4e-api.hoyolab.com/event/sol/sign?lang=en-us", 
@@ -64,7 +67,7 @@ export async function checkIn(cookies) {
 
 function getDefaultHeader() {
   return {
-    'accept': 'application/json, text/plain, /', 
+      'accept': 'application/json, text/plain, /', 
       'accept-language': 'en-US,en;q=0.9,id;q=0.8', 
       'content-type': 'application/json;charset=UTF-8', 
       'origin': 'https://act.hoyolab.com', 

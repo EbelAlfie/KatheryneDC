@@ -8,6 +8,7 @@ export function isModalError(value, interaction) {
 
 export function getTomorrow() {
     const today = new Date()
-    const tomorrow = new Date(today);
-    return tomorrow.setDate(today.getDate() + 1);
+    const tomorrow = new Date()
+    tomorrow.setDate(today.getDate() + 1)
+    return tomorrow
 }

@@ -3,7 +3,7 @@ import { env } from 'node:process'
 import { checkIn, login } from "./source/api.js"
 import { encryptWithPublicKey } from "./util.js"
 import { createHoyoError } from "../domain/model/Errors.js"
-import { HoyoResponseCode } from "../domain/model/HoyoResponseCodes.js"
+import { StatusCodes, HoyoResponseCode } from "../domain/model/StatusCode.js"
 
 export class HoyolabRepository {
     async registerUser(user) {
@@ -26,11 +26,11 @@ export class HoyolabRepository {
         
         return login(newRequest)
             .then(response => {
-                let body = response.data
-                let result = {
+                const body = response.data
+                const result = {
                     data: body?.data ?? null,
                     message: body?.message ?? "",
-                    retcode: body?.retcode ?? HoyoResponseCode.UnknownError,
+                    retcode: body?.retcode ?? StatusCodes.UnknownError,
                     headers: response?.headers
                 }
                 console.log(result)
@@ -43,12 +43,14 @@ export class HoyolabRepository {
         return checkIn(cookie)
         .then(response => {
             console.log(response.data)
-            let body = response.data
-            return {
+            const body = response.data
+            const result = {
                 data: body?.data ?? null,
                 message: body?.message ?? "",
                 retcode: body?.retcode ?? null
             }
+            if (result.retcode == HoyoResponseCode.ResponseSuccess) return result
+            else throw createHoyoError(body)
         })
     }
 }

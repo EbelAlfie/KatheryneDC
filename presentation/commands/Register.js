@@ -44,7 +44,7 @@ export class RegisterCommand extends BaseCommand {
         const senderId = interaction.user.id
         const request = loginRequest(email, password)
 
-        this.service.registerUser(senderId, request)
+        this.userService.registerUser(senderId, request)
             .then(_ => this.#onRegistrationSuccess(interaction))
             .catch(error => this.#onRegistrationFailed(interaction, error))
     }

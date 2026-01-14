@@ -35,6 +35,11 @@ export class Local {
     getTask(param) {
         const { by = Date.now() } = param
         const selectedTasks = this.task.filter(value => value.date <= by)
+        console.log((new Date(by)).toLocaleString('id-ID'))
+        selectedTasks.forEach((value) => {
+            console.log(new Date(value.date).toLocaleString('id-ID'))
+            console.log(value.date === by)
+        })
         return selectedTasks
     }
 }

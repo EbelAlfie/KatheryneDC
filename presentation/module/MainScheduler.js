@@ -31,9 +31,9 @@ export class MainScheduler {
             async () => {
                 const dueTasks = this.taskRepository.getTask()
                 console.log(`Due Task ${dueTasks}`)
-                for (const task of dueTasks) {
+                dueTasks?.forEach(task => {
                     this.#processTask(task)
-                }
+                })
             }
         )
     }

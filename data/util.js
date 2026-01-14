@@ -14,7 +14,7 @@ export function mapResponseBody(response) {
     let result = {
         data: body?.data ?? null,
         message: body?.message ?? "",
-        retcode: body?.retcode ?? UnknownError
+        retcode: body?.retcode ?? StatusCodes.UnknownError
     }
     if (result.retcode == ResponseSuccess) return result
     else throw Error(result)
