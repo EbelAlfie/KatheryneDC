@@ -1,56 +1,55 @@
 import 'dotenv/config'
 import { env } from 'node:process'
-import { checkIn, login } from "./source/api.js"
+import { ApiClient, checkIn, getDailyNote, login } from "./source/api.js"
 import { encryptWithPublicKey } from "./util.js"
-import { createHoyoError } from "../domain/model/Errors.js"
-import { StatusCodes, HoyoResponseCode } from "../domain/model/StatusCode.js"
+import { DailyNote } from '../domain/model/DailyNote.js'
+import { BaseError } from '../domain/model/Errors.js'
 
 export class HoyolabRepository {
+
+    apiClient = new ApiClient()
+
     async registerUser(user) {
-        const publicKey = env.MIHOYO_ENCRYPTION_KEY
-        const encryptedEmail = encryptWithPublicKey({
-            message: user.email,
-            publicKey: publicKey
-        })
-
-        const encryptedPass = encryptWithPublicKey({
-            message: user.password,
-            publicKey: publicKey
-        })
-
-        let newRequest = {
-            account: encryptedEmail||"",
-            password: encryptedPass||"",
-            tokenType: 2
-        }
-        
-        return login(newRequest)
-            .then(response => {
-                const body = response.data
-                const result = {
-                    data: body?.data ?? null,
-                    message: body?.message ?? "",
-                    retcode: body?.retcode ?? StatusCodes.UnknownError,
-                    headers: response?.headers
-                }
-                console.log(result)
-                if (result.retcode == HoyoResponseCode.ResponseSuccess) return result
-                else throw createHoyoError(body)
+        try {
+            const publicKey = env.MIHOYO_ENCRYPTION_KEY
+            const encryptedEmail = encryptWithPublicKey({
+                message: user.email,
+                publicKey: publicKey
             })
+
+            const encryptedPass = encryptWithPublicKey({
+                message: user.password,
+                publicKey: publicKey
+            })
+
+            let newRequest = {
+                account: encryptedEmail||"",
+                password: encryptedPass||"",
+                tokenType: 2
+            }
+            
+            let response = await this.apiClient.login(newRequest)
+            return response
+        } catch(error) {
+            throw BaseError.fromErrorResponse(error)
+        }
     }
 
     async checkIn(cookie) {
-        return checkIn(cookie)
-        .then(response => {
-            console.log(response.data)
-            const body = response.data
-            const result = {
-                data: body?.data ?? null,
-                message: body?.message ?? "",
-                retcode: body?.retcode ?? null
-            }
-            if (result.retcode == HoyoResponseCode.ResponseSuccess) return result
-            else throw createHoyoError(body)
-        })
+        try {
+            let response = await this.apiClient.checkIn(cookie)
+            return response
+        } catch(error) {
+            throw BaseError.fromErrorResponse(error)
+        }
+    }
+
+    async getDailyNote() {
+        try {
+            let response = await this.apiClient.getDailyNote()
+            return DailyNote.fromResponse(response)
+        } catch(error) {
+            throw BaseError.fromErrorResponse(error)
+        }
     }
 }

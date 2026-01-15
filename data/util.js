@@ -8,14 +8,3 @@ export function encryptWithPublicKey(args) {
 
     return encrypted 
 }
-
-export function mapResponseBody(response) {
-    let body = response.data
-    let result = {
-        data: body?.data ?? null,
-        message: body?.message ?? "",
-        retcode: body?.retcode ?? StatusCodes.UnknownError
-    }
-    if (result.retcode == ResponseSuccess) return result
-    else throw Error(result)
-}

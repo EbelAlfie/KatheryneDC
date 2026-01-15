@@ -3,10 +3,10 @@ export const TaskType = Object.freeze({
     DAILY: "DAILY"
 })
 
-export function newTask(userModel, type, date) {
-    return {
-        userModel: userModel,
-        type: type,
-        date: date
+export class TaskModel {
+    constructor(userModel, type, date) {
+        this.userModel = userModel
+        this.type = type
+        this.date = date
     }
 }
