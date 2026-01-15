@@ -1,5 +1,6 @@
 import axios from "axios";
 import { HoyoResponse } from "../response/HoyoResponse";
+import { HoyoResponseError } from "../response/HoyoErrorResponse";
 
 export class ApiClient {
   async login(requestBody) {
@@ -48,10 +49,11 @@ export class ApiClient {
       }
     )
       .then(response => {
+        const body = response.data 
         const result = HoyoResponse.transformWithHeader(body, response?.headers) 
 
         if (result.isSuccess()) return result
-        else throw createHoyoError(body)
+        else throw HoyoResponseError.createErrorByResponse(body)
       })
   }
 
@@ -71,9 +73,10 @@ export class ApiClient {
           headers: headers 
         }
       ).then(response => {
+        const body = response.data 
         const result = HoyoResponse.transform(response)
         if (result.isSuccess()) return result
-        else throw createHoyoError(body)
+        else throw HoyoResponseError.createErrorByResponse(body)
       })
   }
 
@@ -85,9 +88,10 @@ export class ApiClient {
         headers: headers
       }
     ).then(response => {
+        const body = response.data 
         const result = HoyoResponse.transform(response)
         if (result.isSuccess()) return result
-        else throw createHoyoError(body)
+        else throw HoyoResponseError.createErrorByResponse(body)
     })
   }
 

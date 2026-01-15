@@ -1,4 +1,4 @@
-import { HoyoResponseCode, StatusCodes } from "../../domain/model/StatusCode"
+import { HoyoResponseCode } from "../../domain/model/StatusCode"
 
 export class HoyoResponse {
     data
@@ -9,7 +9,7 @@ export class HoyoResponse {
     constructor({data, message, retcode, headers}) { 
         this.data = data ?? {}
         this.message = message ?? ""
-        this.retcode = retcode ?? StatusCodes.UnknownError
+        this.retcode = retcode ?? HoyoResponseCode.UnknownError
         this.headers = headers ?? []
     }
 
@@ -20,7 +20,7 @@ export class HoyoResponse {
             {
                 data: body?.data ?? null,
                 message: body?.message ?? "",
-                retcode: body?.retcode ?? StatusCodes.UnknownError,
+                retcode: body?.retcode ?? HoyoResponseCode.UnknownError,
                 headers: headers ?? {}
             }
         )
@@ -32,7 +32,7 @@ export class HoyoResponse {
             {
                 data: body?.data ?? null,
                 message: body?.message ?? "",
-                retcode: body?.retcode ?? StatusCodes.UnknownError
+                retcode: body?.retcode ?? HoyoResponseCode.UnknownError
             }
         )
     }

@@ -9,4 +9,12 @@ export class TaskModel {
         this.type = type
         this.date = date
     }
+
+    static newTask(userModel, type, date) {
+        return new TaskModel(
+            userModel,
+            type: type,
+            
+        )
+    }
 }
