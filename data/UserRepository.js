@@ -1,5 +1,5 @@
 import { HoyoResponseCode } from "../domain/model/StatusCode.js"
-import { localUserModel } from "../domain/model/Models.js"
+import { localUserModel, UserModel } from "../domain/model/Models.js"
 import { newTask, TaskType } from "../domain/model/Task.js"
 
 export class UserRepository { 
@@ -40,7 +40,7 @@ export class UserRepository {
     }
 
     saveUserCookie(discordId, cookies) {
-        const userModel = localUserModel({
+        const userModel = new UserModel({
             discordId: discordId,
             cookies: cookies
         })

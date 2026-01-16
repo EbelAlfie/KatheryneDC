@@ -28,9 +28,11 @@ export class DailyNote {
         this.currentHomeCoin = currentHomeCoin ?? 0
         this.maxHomeCoin = maxHomeCoin ?? 2400
         this.homeCoinRecoverTime = homeCoinRecoverTime ?? "0"
-        
     }
 
+    estimateResinRecoverTime() {
+        
+    }
 
     static fromResponse(rawResponse) {
         let body = rawResponse.data ?? null

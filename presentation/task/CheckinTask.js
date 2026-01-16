@@ -1,5 +1,5 @@
 import { HoyoResponseCode } from "../../domain/model/StatusCode.js";
-import { newTask } from "../../domain/model/Task.js";
+import { TaskModel, TaskType } from "../../domain/model/Task.js";
 import { getTomorrow } from "../utils.js";
 
 export class CheckInTask {
@@ -23,9 +23,9 @@ export class CheckInTask {
             const response = await this.hoyoRepository.checkIn(cookie)
 
             this.taskRepository.addTask(
-                newTask(
+                TaskModel.newTask(
                     task.userModel,
-                    task.type,
+                    TaskType.CHECK_IN,
                     this.calculateNextExec()
                 )
             )
@@ -41,9 +41,9 @@ export class CheckInTask {
                     scheduleTime = Date.now()
             }
             this.taskRepository.addTask(
-                newTask(
+                TaskModel.newTask(
                     task.userModel,
-                    task.type,
+                    TaskType.CHECK_IN,
                     scheduleTime
                 )
             )

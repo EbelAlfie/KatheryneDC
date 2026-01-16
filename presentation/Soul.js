@@ -5,6 +5,7 @@ import { TaskRepository } from "../data/TaskRepository.js";
 import { Local } from "../data/source/local.js";
 import { UserService } from "../domain/services/UserService.js";
 import { UserRepository } from "../data/UserRepository.js";
+import { GenshinService } from "../domain/services/GenshinService.js";
 
 export class Soul {
     //TODO DI?
@@ -19,6 +20,12 @@ export class Soul {
     userService = new UserService({
         hoyoRepository: this.hoyoRepository,
         userRepository: this.userRepository
+    })
+
+    genshinService = new GenshinService({
+        hoyoRepository: this.hoyoRepository,
+        userRepository: this.userRepository,
+        taskRepository: this.taskRepository
     })
 
     command = new CommandModule({ userService: this.userService })

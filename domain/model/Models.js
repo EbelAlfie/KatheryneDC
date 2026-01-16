@@ -1,10 +1,9 @@
-export function localUserModel(model) {
-    const {
+export class UserModel { 
+    constructor({
         discordId = "", 
         cookies = ""
-    } = model
-    return {
-        discordId: discordId,
-        cookies: cookies
+    }) { 
+        this.discordId = discordId
+        this.cookies = cookies
     }
 }

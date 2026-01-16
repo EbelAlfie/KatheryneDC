@@ -28,6 +28,10 @@ export class UserService {
         }    
     }
 
+    async login(discordId, cookies) {
+        this.saveCookie(discordId, cookies)
+    }
+
     saveCookie(discordId, cookies) {
         this.userRepository.saveUserCookie(discordId, cookies)
     }

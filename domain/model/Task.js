@@ -4,17 +4,17 @@ export const TaskType = Object.freeze({
 })
 
 export class TaskModel {
-    constructor(userModel, type, date) {
+    constructor({userModel, type, date}) {
         this.userModel = userModel
         this.type = type
         this.date = date
     }
 
     static newTask(userModel, type, date) {
-        return new TaskModel(
-            userModel,
+        return new TaskModel({
+            userModel: userModel,
             type: type,
-            
-        )
+            date: date
+        })
     }
 }
