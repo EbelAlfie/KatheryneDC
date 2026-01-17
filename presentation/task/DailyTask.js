@@ -1,4 +1,5 @@
-import { TaskModel, TaskType } from "../../domain/model/Task"
+import { HoyoResponseCode, StatusCodes } from "../../domain/model/StatusCode.js"
+import { TaskModel, TaskType } from "../../domain/model/Task.js"
 
 export class DailyTask {
     hoyoRepository
@@ -15,23 +16,31 @@ export class DailyTask {
 
     async run(task, client) {
         try {
-            const notes = await this.hoyoRepository.getDailyNote()
+            const userModel = task.userModel
+
+            const notesResponse = await this.hoyoRepository.getDailyNote(userModel)
             
-            const newDate = this.calculateNextExec(notes)
+            const newDate = this.calculateNextExec(notesResponse)
             this.taskRepository.addTask(
                 TaskModel.newTask(
-                    task.userModel, 
+                    userModel, 
                     TaskType.DAILY,
                     newDate
                 )
             )
         } catch (error) { 
-            
+            let scheduleTime = Date.now()
+            switch(error.retcode) {
+                case StatusCodes.NotLoggedIn:
+                    return
+                default:
+                    scheduleTime = Date.now()
+            }
             this.taskRepository.addTask(
                 TaskModel.newTask(
                     task.userModel, 
                     TaskType.DAILY,
-                    Date.now()
+                    scheduleTime
                 )
             )
         }

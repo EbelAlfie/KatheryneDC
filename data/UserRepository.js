@@ -1,6 +1,6 @@
 import { HoyoResponseCode } from "../domain/model/StatusCode.js"
-import { localUserModel, UserModel } from "../domain/model/Models.js"
-import { newTask, TaskType } from "../domain/model/Task.js"
+import { UserModel } from "../domain/model/UserModel.js"
+import { TaskModel, TaskType } from "../domain/model/Task.js"
 
 export class UserRepository { 
     localApi
@@ -39,21 +39,22 @@ export class UserRepository {
         }
     }
 
-    saveUserCookie(discordId, cookies) {
+    saveUserCookie(discordId, cookies, userGameRecord) {
         const userModel = new UserModel({
             discordId: discordId,
-            cookies: cookies
+            cookies: cookies,
+            userGameRecord: userGameRecord
         })
         this.localApi.storeUser(userModel)
         this.localApi.addTask(
-            newTask(
+            TaskModel.newTask(
                 userModel,
                 TaskType.CHECK_IN,
                 Date.now()
             )
         )
         this.localApi.addTask(
-            newTask(
+            TaskModel.newTask(
                 userModel,
                 TaskType.DAILY,
                 Date.now()

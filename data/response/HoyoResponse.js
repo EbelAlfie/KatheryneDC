@@ -1,4 +1,4 @@
-import { HoyoResponseCode } from "../../domain/model/StatusCode"
+import { HoyoResponseCode } from "../../domain/model/StatusCode.js"
 
 export class HoyoResponse {
     data

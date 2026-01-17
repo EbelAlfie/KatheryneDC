@@ -1,9 +1,10 @@
 import 'dotenv/config'
 import { env } from 'node:process'
-import { ApiClient, checkIn, getDailyNote, login } from "./source/api.js"
+import { ApiClient } from "./source/api.js"
 import { encryptWithPublicKey } from "./util.js"
 import { DailyNote } from '../domain/model/DailyNote.js'
-import { BaseError } from '../domain/model/Errors.js'
+import { BaseError, UidNotFoundError } from '../domain/model/Errors.js'
+import { UserGameRecord } from '../domain/model/UserGameRecord.js'
 
 export class HoyolabRepository {
 
@@ -44,11 +45,29 @@ export class HoyolabRepository {
         }
     }
 
-    async getDailyNote() {
+    async getDailyNote(userModel) {
         try {
-            let response = await this.apiClient.getDailyNote()
+            const genshinId = userModel.getGenshinRoleId()
+            const server = userModel.getServerRegion()
+            const cookies = userModel.cookies
+
+            const requestModel = {
+                genshinId: genshinId,
+                server: server
+            }
+            let response = await this.apiClient.getDailyNote(requestModel, cookies)
             return DailyNote.fromResponse(response)
         } catch(error) {
+            throw BaseError.fromErrorResponse(error)
+        }
+    }
+
+    async getGameRecord(uid, cookie) {
+        try {
+            let response = await this.apiClient.getGameRecord(uid, cookie)
+            return UserGameRecord.fromResponse(response)
+        } catch (error) { 
+            console.log(error)
             throw BaseError.fromErrorResponse(error)
         }
     }

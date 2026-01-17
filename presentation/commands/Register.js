@@ -2,7 +2,6 @@ import { SlashCommandBuilder } from "discord.js"
 import { isModalError } from "../utils.js"
 import { LoginModalBuilder } from "../components/modals.js"
 import BaseCommand from "../models/BaseCommand.js"
-import { loginRequest } from "../../domain/request/Request.js"
 import { LoginRequest } from "../../domain/request/LoginRequest.js"
 
 /** A slash command to register users to hoyolab api */

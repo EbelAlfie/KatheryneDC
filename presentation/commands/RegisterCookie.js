@@ -28,10 +28,15 @@ export class RegisterCookie extends BaseCommand {
         const cookie = interaction.options.getString(this.OPTION_COOKIE)
         const senderId = interaction.user.id
         if (!cookie || cookie === "") {
-            interaction.reply("Cookienya ga ada")
+            return interaction.reply("Cookienya ga ada")
         } 
 
-        this.userService.saveCookie(senderId, cookie)
-        interaction.reply("Success storing cookie")
+        try { 
+            const response = await this.userService.login(senderId, cookie)
+
+            interaction.reply("Success storing cookie")
+        } catch (error) { 
+            interaction.reply("Gagal login")
+        }
     }
 }

@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from "discord.js"
 import BaseCommand from "../models/BaseCommand.js"
-import { TimeSpinner } from "../components/selection.js"
 import { HoyoResponseCode } from "../../domain/model/StatusCode.js"
 
 export class CheckInCommand extends BaseCommand {
@@ -40,27 +39,6 @@ export class CheckInCommand extends BaseCommand {
         //     default: 
         //         interaction.channel.send('Maaf yaa lagi error')
         // }
-    }
-
-    #showTimeSpinner(interaction) {
-        const time = new TimeSpinner()
-        interaction.reply({
-            components: [time.createComponent()]
-        })
-    }
-
-    onTimeSelected(interaction) {
-        const time = interaction.values[0] ?? "00:00"
-
-        interaction.reply("Sukses yaa")
-
-        this.checkInScheduler.startReminder(
-            time,
-            {
-                onSuccess: result => this.sendCheckInMessage(result, interaction),
-                onError: error => this.handleError(error, interaction)
-            }
-        )
     }
     
     sendCheckInMessage(result, interaction) {

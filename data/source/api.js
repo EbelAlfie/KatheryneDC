@@ -1,6 +1,6 @@
 import axios from "axios";
-import { HoyoResponse } from "../response/HoyoResponse";
-import { HoyoResponseError } from "../response/HoyoErrorResponse";
+import { HoyoResponse } from "../response/HoyoResponse.js";
+import { HoyoResponseError } from "../response/HoyoErrorResponse.js";
 
 export class ApiClient {
   async login(requestBody) {
@@ -59,12 +59,7 @@ export class ApiClient {
 
 
   async checkIn(cookies) {
-      const headers = Object.assign(
-        getDefaultHeader(), 
-        {
-          'Cookie': cookies
-        }
-      )
+      const headers = Object.assign(this.getDefaultHeader(), { 'Cookie': cookies })
 
       return axios.post(
         "https://sg-hk4e-api.hoyolab.com/event/sol/sign?lang=en-us", 
@@ -80,19 +75,42 @@ export class ApiClient {
       })
   }
 
-  async getDailyNote() {
-    const headers = getDefaultHeader()
-    const url = "https://sg-public-api.hoyolab.com/event/game_record/genshin/api/dailyNote?server=os_asia&role_id=879370443"
+  async getDailyNote(param, cookies) {
+    const {
+      server = "os_asia",
+      genshinId = ""
+    } = param
+    const headers = Object.assign(this.getDefaultHeader(), { 'Cookie': cookies })
+    const params = `server=${server}&role_id=${genshinId}`
+    const url = `https://sg-public-api.hoyolab.com/event/game_record/genshin/api/dailyNote?${params}`
     return axios.get(url,
       {
         headers: headers
       }
     ).then(response => {
+        console.log(response)
         const body = response.data 
         const result = HoyoResponse.transform(response)
         if (result.isSuccess()) return result
         else throw HoyoResponseError.createErrorByResponse(body)
     })
+  }
+
+  async getGameRecord(uid, cookies) {
+    const headers = Object.assign(this.getDefaultHeader(), { 'Cookie': cookies })
+    const param = `uid=${uid}`
+    const url = `https://sg-public-api.hoyolab.com/event/game_record/card/wapi/getGameRecordCard?${param}`
+    return axios.get(url, 
+      {
+        headers: headers
+      }
+    )
+      .then(response => {
+        const body = response.data 
+        const result = HoyoResponse.transform(response)
+        if (result.isSuccess()) return result
+        else throw HoyoResponseError.createErrorByResponse(body)
+      })
   }
 
   getDefaultHeader() {

@@ -17,20 +17,21 @@ export class CheckInTask {
 
     async run(task, client) {
         try {
-            const cookie = task?.userModel?.cookies ?? ""
+            const userModel = task.userModel
+            const cookie = userModel.cookies ?? ""
             
             this.taskRepository.removeTask(task)
             const response = await this.hoyoRepository.checkIn(cookie)
 
             this.taskRepository.addTask(
                 TaskModel.newTask(
-                    task.userModel,
+                    userModel,
                     TaskType.CHECK_IN,
                     this.calculateNextExec()
                 )
             )
-        } catch(error) { 
-            let scheduleTime = Date.now
+        } catch(error) {
+            let scheduleTime = Date.now()
             switch(error.retcode) {
                 case HoyoResponseCode.AlreadyCheckIn:
                     scheduleTime = this.calculateNextExec()
