@@ -1,7 +1,7 @@
 import nodeCron from "node-cron"
-import { CheckInTask } from "../task/CheckinTask.js"
-import { TaskType } from "../../domain/model/Task.js"
-import { DailyTask } from "../task/DailyTask.js"
+import { CheckInTask } from "./task/CheckinTask.js"
+import { DailyTask } from "./task/DailyTask.js"
+import { TaskType } from "../domain/model/Task.js"
 
 export class MainScheduler {
     discordClient

@@ -30,8 +30,10 @@ export class DailyNote {
         this.homeCoinRecoverTime = homeCoinRecoverTime ?? "0"
     }
 
-    estimateResinRecoverTime() {
-        
+    estimateResinRecoverDate() {
+        const now = new Date()
+        now.setSeconds(now.getSeconds() + this.resinRecoveryTime)
+        return now
     }
 
     static fromResponse(rawResponse) {
@@ -55,5 +57,5 @@ export class DailyNote {
         )
     }
 
-    
+
 }

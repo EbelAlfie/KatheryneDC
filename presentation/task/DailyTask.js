@@ -47,6 +47,6 @@ export class DailyTask {
     }
 
     calculateNextExec(dailyNotes) {
-         return Date.now()
+        return dailyNotes.estimateResinRecoverDate()
     }
 }

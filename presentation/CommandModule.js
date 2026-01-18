@@ -1,9 +1,11 @@
 import { REST, Routes, Collection } from "discord.js";
-import { RegisterCommand } from "../commands/Register.js";
-import { CheckInCommand } from "../commands/CheckIn.js";
-import BaseCommand from "../models/BaseCommand.js";
-import { LoginModalBuilder } from "../components/modals.js";
-import { RegisterCookie } from "../commands/RegisterCookie.js";
+import { RegisterCommand } from "./commands/Register.js";
+import { CheckInCommand } from "./commands/CheckIn.js";
+import BaseCommand from "./base/BaseCommand.js";
+import { RegisterCookie } from "./commands/RegisterCookie.js";
+import { RegisterButton } from "./components/RegisterButton.js";
+import { RegisterModalBuilder } from "./components/RegisterModal.js";
+import { CookieModal } from "./components/CookieModal.js";
 
 export class CommandModule {
     userService
@@ -14,9 +16,9 @@ export class CommandModule {
         this.userService = userService
 
         this.slashCommand = [
+            new RegisterCookie({ userService: this.userService }),
             new RegisterCommand({ userService: this.userService }),
-            new CheckInCommand({ userService: this.userService }),
-            new RegisterCookie({ userService: this.userService })
+            new CheckInCommand({ userService: this.userService })
         ]
     }
 
@@ -48,7 +50,14 @@ export class CommandModule {
     async handleCommand(interaction) {
         if (interaction.isChatInputCommand()) this.#handleChatCommand(interaction)
 
-        if (interaction.customId === LoginModalBuilder.componentId) this.slashCommand[0].onRegisterModalSubmitted(interaction)
+        switch(interaction.customId) { 
+            case RegisterButton.componentId:
+                this.slashCommand[0].showRegistrationForm(interaction)
+                break;
+            case CookieModal.componentId:
+                this.slashCommand[0].registerUser(interaction)
+                break;
+        }
     }
 
     async #handleChatCommand(interaction) {
