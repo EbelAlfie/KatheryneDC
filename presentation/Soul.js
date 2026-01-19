@@ -28,7 +28,10 @@ export class Soul {
         taskRepository: this.taskRepository
     })
 
-    command = new CommandModule({ userService: this.userService })
+    command = new CommandModule({ 
+        userService: this.userService ,
+        genshinService: this.genshinService
+    })
     scheduler = new MainScheduler()
     
     /** Called when the bot has logged in */

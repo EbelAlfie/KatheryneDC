@@ -1,5 +1,5 @@
 export function isModalError(value, interaction) {
-    if (value === undefined) {
+    if (value === undefined || value === "") {
         interaction.reply({content : `${value} kamu tidak lengkap`})
         return true
     }

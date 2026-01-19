@@ -19,6 +19,10 @@ export class Local {
         return this.userData.find((value, index) => value.userDiscordId == discordId) != undefined
     }
 
+    getUserById(discordId) { 
+        return this.userData.find((value => value.discordId === discordId))
+    }
+
     storeUser(newUser) {
         this.userData.push(newUser)
     }

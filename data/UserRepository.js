@@ -1,6 +1,7 @@
 import { HoyoResponseCode } from "../domain/model/StatusCode.js"
 import { UserModel } from "../domain/model/UserModel.js"
 import { TaskModel, TaskType } from "../domain/model/Task.js"
+import { UserNotFoundError } from "../domain/model/Errors.js"
 
 export class UserRepository { 
     localApi
@@ -16,6 +17,13 @@ export class UserRepository {
 
     hasUser() {
         return !this.localApi.isUserListEmpty()
+    }
+
+    getUserById(discordId) {
+        const targetUser = this.localApi.getUserById(discordId)
+        if (!targetUser || targetUser === null)
+            throw new UserNotFoundError()
+        return targetUser
     }
 
     saveUser(discordId, result) {

@@ -7,29 +7,32 @@ import { isModalError } from "../utils.js";
 
 export class RegisterCookie extends BaseCommand {
     userService
+
+    registerButton
     
     constructor(config) { 
         super()
         const { userService } = config
         this.userService = userService
+
+        this.registerButton = new RegisterButton().create()
     }
 
     data = new SlashCommandBuilder()
         .setName("cookie")
-        .setDescription("Command to register cookie to hoyolab")
+        .setDescription("Command to register your hoyolab cookie. Katheryne will send a DM")
 
     async execute(interaction)  {
-        const registerButton = new RegisterButton()
         const dm = interaction.user.createDM()
         .then(result => {
             interaction.reply({ content: StringRes.message_checkdm, ephemeral: true })
             result.send({
                 content: StringRes.message_greetings,
-                components: [registerButton.create()]
+                components: [this.registerButton]
             })
         })
         .catch(error => {
-            interaction.reply({ content: 'Psstt! I cannot dm you', ephemeral: true })
+            interaction.reply({ content: StringRes.message_failed_dm, ephemeral: true })
         })
     }
 
@@ -41,8 +44,8 @@ export class RegisterCookie extends BaseCommand {
     async registerUser(interaction) { 
         let fields = interaction.fields
         
-        let cookie = fields.fields.get("cookie")
-        if (isModalError(cookie.value, interaction)) return 
+        let cookie = fields.fields.get("cookie")?.value
+        if (isModalError(cookie, interaction)) return 
 
         const senderId = interaction.user.id
         if (!cookie || cookie === "") {
@@ -52,7 +55,7 @@ export class RegisterCookie extends BaseCommand {
         try { 
             const response = await this.userService.login(senderId, cookie)
 
-            interaction.reply("Success storing cookie")
+            interaction.reply(StringRes.message_success_regist)
         } catch (error) { 
             interaction.reply("Gagal login")
         }

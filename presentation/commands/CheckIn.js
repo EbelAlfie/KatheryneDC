@@ -3,14 +3,14 @@ import BaseCommand from "../base/BaseCommand.js"
 import { HoyoResponseCode } from "../../domain/model/StatusCode.js"
 
 export class CheckInCommand extends BaseCommand {
-    userService
+    genshinService
     
     constructor(config) { 
         super()
         const { 
             userService
         } = config
-        this.userService = userService
+        this.genshinService = userService
     }
 
     data = new SlashCommandBuilder()
@@ -18,7 +18,13 @@ export class CheckInCommand extends BaseCommand {
         .setDescription("Imediately checks you in to hoyolab")
         
     async execute(interaction) {
-        
+        try { 
+            const senderId = interaction.user.id
+            const checkInResponse = this.genshinService.checkInByUser(senderId)
+            
+        } catch(error) { 
+            this.handleError(error, interaction)  
+        }
     }
 
     async handleError(error, interaction) {

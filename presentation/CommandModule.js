@@ -9,16 +9,18 @@ import { CookieModal } from "./components/CookieModal.js";
 
 export class CommandModule {
     userService
+    genshinService
     slashCommand
 
     constructor(config) {
-        const { userService } = config
+        const { userService, genshinService } = config
         this.userService = userService
+        this.genshinService = genshinService
 
         this.slashCommand = [
             new RegisterCookie({ userService: this.userService }),
             new RegisterCommand({ userService: this.userService }),
-            new CheckInCommand({ userService: this.userService })
+            new CheckInCommand({ genshinService: this.genshinService })
         ]
     }
 

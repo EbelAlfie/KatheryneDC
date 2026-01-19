@@ -68,6 +68,7 @@ export class ApiClient {
           headers: headers 
         }
       ).then(response => {
+        console.log("Success check in")
         const body = response.data 
         const result = HoyoResponse.transform(response)
         if (result.isSuccess()) return result
@@ -88,7 +89,7 @@ export class ApiClient {
         headers: headers
       }
     ).then(response => {
-        console.log(response)
+        console.log("Success dapet daily note")
         const body = response.data 
         const result = HoyoResponse.transform(response)
         if (result.isSuccess()) return result
