@@ -45,6 +45,7 @@ export class MainScheduler {
         switch (task.type) {
             case TaskType.CHECK_IN:
                 this.checkin.run(task, this.discordClient)
+                break;
             case TaskType.DAILY:
                 this.daily.run(task, this.discordClient)
                 break;

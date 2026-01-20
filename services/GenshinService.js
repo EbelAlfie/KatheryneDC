@@ -1,5 +1,3 @@
-import { BaseError } from "../model/Errors"
-
 export class GenshinService {
     userRepository
     hoyoRepository
@@ -17,12 +15,8 @@ export class GenshinService {
     }
 
     checkInByUser(discordId) {
-        try {
-            const targetUser = this.userRepository.getUserById(discordId)
-            const response = this.hoyoRepository.checkIn(targetUser.cookies)
-            return response
-        } catch(error) { 
-            throw BaseError.fromErrorResponse(error)
-        }    
+        const targetUser = this.userRepository.getUserById(discordId)
+        const response = this.hoyoRepository.checkIn(targetUser.cookies)
+        return { targetUser, response }
     }
 } 

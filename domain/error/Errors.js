@@ -9,11 +9,11 @@ export class BaseError extends Error {
     static fromErrorResponse(responseError) {
         switch(responseError.retcode) {
             case HoyoResponseCode.AlreadyCheckIn:
-                return new AlreadyCheckInError("Kamu sudah check in hari ini")
+                return new AlreadyCheckInError(responseError.message)
             case HoyoResponseCode.NotLoggedIn:
-                return new NotLoggedInError("Kamu belum log in")
+                return new NotLoggedInError(responseError.message)
             default:
-                return new UnknownError("Unknown Error")
+                return new UnknownError(responseError.message)
         }
     }
 }

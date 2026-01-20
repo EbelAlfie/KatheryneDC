@@ -2,9 +2,9 @@ import { CommandModule } from "./CommandModule.js";
 import { HoyolabRepository } from "../data/HoyolabRepository.js";
 import { TaskRepository } from "../data/TaskRepository.js";
 import { Local } from "../data/source/local.js";
-import { UserService } from "../domain/services/UserService.js";
+import { UserService } from "../services/UserService.js";
 import { UserRepository } from "../data/UserRepository.js";
-import { GenshinService } from "../domain/services/GenshinService.js";
+import { GenshinService } from "../services/GenshinService.js";
 import { MainScheduler } from "./MainScheduler.js";
 
 export class Soul {

@@ -3,7 +3,7 @@ import { env } from 'node:process'
 import { ApiClient } from "./source/api.js"
 import { encryptWithPublicKey } from "./util.js"
 import { DailyNote } from '../domain/model/DailyNote.js'
-import { BaseError, UidNotFoundError } from '../domain/model/Errors.js'
+import { BaseError, UidNotFoundError } from '../domain/error/Errors.js'
 import { UserGameRecord } from '../domain/model/UserGameRecord.js'
 
 export class HoyolabRepository {

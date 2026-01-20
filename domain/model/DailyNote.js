@@ -32,7 +32,13 @@ export class DailyNote {
 
     estimateResinRecoverDate() {
         const now = new Date()
-        now.setSeconds(now.getSeconds() + this.resinRecoveryTime)
+        if (this.currentResin < this.maxResin) 
+            now.setSeconds(now.getSeconds() + this.resinRecoveryTime)
+        else 
+            now.setHours(now.getHours() + 1)
+
+        console.log("TEST ")
+        console.log(now.toLocaleString())
         return now
     }
 

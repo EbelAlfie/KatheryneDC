@@ -1,7 +1,7 @@
-import { HoyoResponseCode } from "../domain/model/StatusCode.js"
+import { HoyoResponseCode } from "../domain/error/StatusCode.js"
 import { UserModel } from "../domain/model/UserModel.js"
 import { TaskModel, TaskType } from "../domain/model/Task.js"
-import { UserNotFoundError } from "../domain/model/Errors.js"
+import { UserNotFoundError } from "../domain/error/Errors.js"
 
 export class UserRepository { 
     localApi

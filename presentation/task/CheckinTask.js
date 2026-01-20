@@ -1,8 +1,11 @@
-import { HoyoResponseCode } from "../../domain/model/StatusCode.js";
+import { StringRes } from "../../assets/Strings.js";
+import { HoyoResponseCode } from "../../domain/error/StatusCode.js";
 import { TaskModel, TaskType } from "../../domain/model/Task.js";
-import { getTomorrow } from "../utils.js";
+import { getTargetUser, getTomorrow, sendDMMessage } from "../utils.js";
 
 export class CheckInTask {
+    taskType = TaskType.CHECK_IN
+
     hoyoRepository
     taskRepository
     
@@ -26,28 +29,14 @@ export class CheckInTask {
             this.taskRepository.addTask(
                 TaskModel.newTask(
                     userModel,
-                    TaskType.CHECK_IN,
+                    this.taskType,
                     this.calculateNextExec()
                 )
             )
+
+            this.onOperationSuccess(userModel, client)
         } catch(error) {
-            let scheduleTime = Date.now()
-            switch(error.retcode) {
-                case HoyoResponseCode.AlreadyCheckIn:
-                    scheduleTime = this.calculateNextExec()
-                    break
-                case HoyoResponseCode.NotLoggedIn:
-                    return
-                default:
-                    scheduleTime = Date.now()
-            }
-            this.taskRepository.addTask(
-                TaskModel.newTask(
-                    task.userModel,
-                    TaskType.CHECK_IN,
-                    scheduleTime
-                )
-            )
+            this.onOperationFailed(task, error, client)
         }
     }
 
@@ -55,5 +44,37 @@ export class CheckInTask {
         const tomorrow = getTomorrow()
         tomorrow.setHours(1, 0, 0, 0)
         return tomorrow.getTime()  
+    }
+
+    async onOperationSuccess(userModel, client) { 
+        const user = await getTargetUser(client, userModel.discordId)
+        const userName = userModel.userGameRecord.nickname
+        sendDMMessage(user, StringRes.message_success_checkin(userName))
+    }
+
+    async onOperationFailed(task, error, client) { 
+        const userModel = task.userModel
+        const user = await getTargetUser(client, userModel.discordId)
+        const userName = userModel.userGameRecord.nickname
+        let scheduleTime = Date.now()
+            switch(error.retcode) {
+                case HoyoResponseCode.AlreadyCheckIn:
+                    scheduleTime = this.calculateNextExec()
+                    sendDMMessage(user, error.message)
+                    break
+                case HoyoResponseCode.NotLoggedIn:
+                    sendDMMessage(user, StringRes.message_not_logged_in)
+                    return
+                default:
+                    scheduleTime = Date.now()
+                    sendDMMessage(user, StringRes.message_failed_checkin(userName))
+            }
+            this.taskRepository.addTask(
+                TaskModel.newTask(
+                    userModel,
+                    this.taskType,
+                    scheduleTime
+                )
+            )
     }
 }

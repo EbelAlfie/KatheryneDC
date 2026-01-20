@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from "discord.js"
 import BaseCommand from "../base/BaseCommand.js"
-import { HoyoResponseCode } from "../../domain/model/StatusCode.js"
+import { StringRes } from "../../assets/Strings.js"
 
 export class CheckInCommand extends BaseCommand {
     genshinService
@@ -20,24 +20,15 @@ export class CheckInCommand extends BaseCommand {
     async execute(interaction) {
         try { 
             const senderId = interaction.user.id
-            const checkInResponse = this.genshinService.checkInByUser(senderId)
+            const response = this.genshinService.checkInByUser(senderId)
             
+            interaction.channel.send(StringRes.message_success_checkin(response.targetUser))
         } catch(error) { 
             this.handleError(error, interaction)  
         }
     }
 
     async handleError(error, interaction) {
-        
-    }
-    
-    sendCheckInMessage(result, interaction) {
-        let message = "Yahh gagal checkin"
-        if (result.retcode != HoyoResponseCode.ResponseSuccess)
-            message = result.data.message
-        else 
-            message = "Sukses check in ya, traveler"
-    
-        interaction.channel.send(message)
+        interaction.channel.send(error.message)
     }
 }
