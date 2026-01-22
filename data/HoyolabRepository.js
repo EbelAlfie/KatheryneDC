@@ -45,6 +45,26 @@ export class HoyolabRepository {
         }
     }
 
+    async redeemCode(code, userModel) { 
+        try { 
+            const genshinId = userModel.getGenshinRoleId()
+            const server = userModel.getServerRegion()
+            const cookies = userModel.cookies
+
+            let response = await this.apiClient.redeemCode(
+                {
+                    genshinId: genshinId,
+                    server: server,
+                    code: code
+                }, 
+                cookies
+            )
+            return response
+        } catch (error) { 
+            throw BaseError.fromErrorResponse(error)
+        }
+    }
+
     async getDailyNote(userModel) {
         try {
             const genshinId = userModel.getGenshinRoleId()

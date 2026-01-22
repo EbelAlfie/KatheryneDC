@@ -5,15 +5,27 @@ export class UserModel {
         userGameRecord
     }) { 
         this.discordId = discordId
-        this.cookies = cookies
+        this.cookies = this.adjustCookie(cookies)
         this.userGameRecord = userGameRecord
     }
 
+
+    adjustCookie(cookie) { 
+        const key = "account_mid_v2"
+        if (this.getField(key, cookie) !== "") return 
+        let mid = this.getField("ltmid_v2", cookie)
+        return cookie + `${key}=${mid};`
+    }
+
+    getField(key, cookie) {
+        if (!cookie || !key) return ""
+        const regex = new RegExp(`(?:^|;\\s*)${key}=([^;]+)`)
+        const matches = cookie.match(regex)
+        return matches ? matches[1] : ""
+    }
+
     getUid() { 
-        const key = "ltuid_v2="
-        const regex = new RegExp(`(?:^|;\\s*)${key}([^;]+)`)
-        const matches = this.cookies.match(regex)
-        return matches[1]
+        return getField("ltuid_v2", this.cookies)
     }
 
     getGenshinRoleId() { 

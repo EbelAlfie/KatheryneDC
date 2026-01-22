@@ -26,7 +26,7 @@ export class UserService {
         const key = "ltuid_v2="
         const regex = new RegExp(`(?:^|;\\s*)${key}([^;]+)`)
         const matches = cookies.match(regex)
-        const uid = matches[1]
+        const uid = matches ? matches[1] : ""
         const userGameRecord = await this.hoyoRepository.getGameRecord(uid, cookies)
         this.#saveCookie(discordId, cookies, userGameRecord)
         return userGameRecord

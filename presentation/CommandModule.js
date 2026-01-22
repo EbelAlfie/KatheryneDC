@@ -1,11 +1,11 @@
 import { REST, Routes, Collection } from "discord.js";
-import { RegisterCommand } from "./commands/Register.js";
 import { CheckInCommand } from "./commands/CheckIn.js";
 import BaseCommand from "./base/BaseCommand.js";
-import { RegisterCookie } from "./commands/RegisterCookie.js";
+import { RegisterCommand } from "./commands/RegisterCommand.js";
 import { RegisterButton } from "./components/RegisterButton.js";
 import { RegisterModalBuilder } from "./components/RegisterModal.js";
 import { CookieModal } from "./components/CookieModal.js";
+import { RedeemCode } from "./commands/RedeemCode.js";
 
 export class CommandModule {
     userService
@@ -18,9 +18,9 @@ export class CommandModule {
         this.genshinService = genshinService
 
         this.slashCommand = [
-            new RegisterCookie({ userService: this.userService }),
             new RegisterCommand({ userService: this.userService }),
-            new CheckInCommand({ genshinService: this.genshinService })
+            new CheckInCommand({ genshinService: this.genshinService }),
+            new RedeemCode({ genshinService: this.genshinService })
         ]
     }
 

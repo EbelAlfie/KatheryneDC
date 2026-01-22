@@ -5,7 +5,7 @@ import { RegisterButton } from "../components/RegisterButton.js";
 import { CookieModal } from "../components/CookieModal.js";
 import { isModalError } from "../utils.js";
 
-export class RegisterCookie extends BaseCommand {
+export class RegisterCommand extends BaseCommand {
     userService
 
     registerButton
@@ -19,7 +19,7 @@ export class RegisterCookie extends BaseCommand {
     }
 
     data = new SlashCommandBuilder()
-        .setName("cookie")
+        .setName("register")
         .setDescription("Command to register your hoyolab cookie. Katheryne will send a DM")
 
     async execute(interaction)  {
@@ -57,6 +57,7 @@ export class RegisterCookie extends BaseCommand {
 
             interaction.reply(StringRes.message_success_regist)
         } catch (error) { 
+            console.log(error)
             interaction.reply("Gagal login")
         }
     }

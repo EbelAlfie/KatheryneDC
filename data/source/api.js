@@ -76,6 +76,28 @@ export class ApiClient {
       })
   }
 
+  async redeemCode(param, cookies) { 
+    const {
+      server = "os_asia",
+      genshinId = "",
+      code = ""
+    } = param
+    const headers = Object.assign(this.getDefaultHeader(), { 'Cookie': cookies })
+    const params = `region=${server}&uid=${genshinId}&cdkey=${code}`
+    const url = `https://public-operation-hk4e.hoyoverse.com/common/apicdkey/api/webExchangeCdkey?${params}&lang=en&game_biz=hk4e_global&sLangKey=en-us`
+    return axios.get(url,
+      {
+        headers: headers
+      }
+    ).then(response => {
+        console.log(response)
+        const body = response.data 
+        const result = HoyoResponse.transform(response)
+        if (result.isSuccess()) return result
+        else throw HoyoResponseError.createErrorByResponse(body)
+    })
+  }
+
   async getDailyNote(param, cookies) {
     const {
       server = "os_asia",
@@ -107,6 +129,7 @@ export class ApiClient {
       }
     )
       .then(response => {
+        console.log(response)
         const body = response.data 
         const result = HoyoResponse.transform(response)
         if (result.isSuccess()) return result

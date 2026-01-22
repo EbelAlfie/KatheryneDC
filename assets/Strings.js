@@ -39,7 +39,9 @@ export const StringRes = {
     Ad astra abyssosque, ${user}! 
     Your resin is already full
     Total resin: ${resin}
-    `)
+    `),
+    message_invalid_redeem_code: "It seems like the redeem code inputed is invalid",
+    message_code_redeemed: (user) => `Dear ${user}, code successfully redeemed! Claim them before it expires~`
 }
 
 function clean(str) {

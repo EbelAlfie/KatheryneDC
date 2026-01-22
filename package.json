@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "kath": "node index.js --env-file=.env",
-    "test": "node test.js"
+    "test": "node debug.js"
   },
   "author": "",
   "license": "ISC",

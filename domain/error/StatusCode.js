@@ -3,7 +3,8 @@ export const HoyoResponseCode = {
   PleaseLogin : 10001,
   AlreadyCheckIn : -5003,
   ResponseSuccess : 0, 
-  UnknownError : -1
+  UnknownError : -1,
+  InvalidRedeemCode: -2003
 }
 
 export const StatusCodes = {

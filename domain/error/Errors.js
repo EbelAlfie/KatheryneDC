@@ -12,6 +12,8 @@ export class BaseError extends Error {
                 return new AlreadyCheckInError(responseError.message)
             case HoyoResponseCode.NotLoggedIn:
                 return new NotLoggedInError(responseError.message)
+            case HoyoResponseCode.PleaseLogin:
+                return new NotLoggedInError(responseError.message)
             default:
                 return new UnknownError(responseError.message)
         }

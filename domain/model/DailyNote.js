@@ -36,9 +36,6 @@ export class DailyNote {
             now.setSeconds(now.getSeconds() + this.resinRecoveryTime)
         else 
             now.setHours(now.getHours() + 1)
-
-        console.log("TEST ")
-        console.log(now.toLocaleString())
         return now
     }
 

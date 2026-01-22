@@ -24,6 +24,8 @@ export class DailyTask {
 
             const notesResponse = await this.hoyoRepository.getDailyNote(userModel)
             
+            this.taskRepository.removeTask(task)
+
             const newDate = this.calculateNextExec(notesResponse)
             this.taskRepository.addTask(
                 TaskModel.newTask(
@@ -63,7 +65,7 @@ export class DailyTask {
 
     async onOperationFailed(task, error, client) { 
         const userModel = task.userModel
-        const user = getTargetUser(client, userModel.discordId)
+        const user = await getTargetUser(client, userModel.discordId)
         const userName = userModel.userGameRecord.nickname
 
         let scheduleTime = Date.now()
