@@ -1,30 +1,70 @@
-export class Local {
-    userData = [] //Pair of email and cookies
+import { env } from 'node:process'
+import mysql from 'mysql2/promise';
+import { DBConfig } from './DBConfig.js';
+import { UserModel } from '../../domain/model/UserModel.js';
+import { UserNotFoundError } from '../../domain/error/Errors.js';
 
+export class Local {
+    dbConnection
     task = []
 
     constructor() {
-        // Sample this.userData.set("johndoe@gmail.com", ["token=goblog", "token=anjing"])
+        this.initConnection()
     }
 
-    allUsers() {
-        return this.userData
-    }
-
-    isUserListEmpty() {
-        return this.userData.size <= 0
+    async initConnection() { 
+        const password = env.DB_PASSWORD
+        const port = env.DB_PORT
+        const host = env.DB_HOST
+        const user = env.DB_USER
+        this.dbConnection = mysql.createPool({
+            host: host,
+            port: port,
+            user: user,
+            password: password,
+            database: "hoyo",
+            enableKeepAlive: true
+        })
     }
 
     isUserExist(discordId) {
         return this.userData.find((value, index) => value.userDiscordId == discordId) != undefined
     }
 
-    getUserById(discordId) { 
-        return this.userData.find((value => value.discordId === discordId))
+    async getUserById(discordId) { 
+        let [rows, _] = await this.dbConnection.query(`
+            SELECT * FROM ${DBConfig.UserTable} WHERE discord_id = ?
+        `, [discordId])
+        const userData = rows.length > 0 ? rows[0] : null
+        if (userData === null) throw new UserNotFoundError("")
+
+        let userModel = UserModel.fromDatabase(userData)
+        return userModel
     }
 
-    storeUser(newUser) {
-        this.userData.push(newUser)
+    async storeUser(newUser) {
+        const userGameRecord = newUser.userGameRecord
+        if (!userGameRecord) return 
+        let data = await this.dbConnection.query(`
+            INSERT INTO ${DBConfig.UserTable} (
+            discord_id, 
+            cookie, 
+            game_id, 
+            game_role_id, 
+            nickname,
+            region
+            ) VALUES (?, ?, ?, ?, ?, ?)
+        `,
+        [
+            newUser.discordId,
+            newUser.cookies,
+            userGameRecord.gameId,
+            userGameRecord.gameRoleId,
+            userGameRecord.nickname,
+            userGameRecord.region
+        ]
+        )
+        console.log(data)
     }
 
     addTask(newTask) { 

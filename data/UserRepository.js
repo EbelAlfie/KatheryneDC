@@ -19,8 +19,8 @@ export class UserRepository {
         return !this.localApi.isUserListEmpty()
     }
 
-    getUserById(discordId) {
-        const targetUser = this.localApi.getUserById(discordId)
+    async getUserById(discordId) {
+        const targetUser = await this.localApi.getUserById(discordId)
         if (!targetUser || targetUser === null)
             throw new UserNotFoundError()
         return targetUser
@@ -47,13 +47,14 @@ export class UserRepository {
         }
     }
 
-    saveUserCookie(discordId, cookies, userGameRecord) {
+   async saveUserCookie(discordId, cookies, userGameRecord) {
         const userModel = new UserModel({
             discordId: discordId,
             cookies: cookies,
             userGameRecord: userGameRecord
         })
-        this.localApi.storeUser(userModel)
+        const result = await this.localApi.storeUser(userModel)
+        console.log(`result ${result}`)
         this.localApi.addTask(
             TaskModel.newTask(
                 userModel,

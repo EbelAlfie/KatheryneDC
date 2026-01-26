@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "kath": "node index.js --env-file=.env",
+    "db": "node ./database/initdb.js --env-file=.env",
     "test": "node debug.js"
   },
   "author": "",
@@ -14,6 +15,7 @@
     "axios": "^1.7.7",
     "discord.js": "^14.16.2",
     "dotenv": "^16.4.5",
+    "mysql2": "^3.16.1",
     "node-cron": "^4.2.1",
     "nodejs-jsencrypt": "^3.0.0-rc.1"
   }

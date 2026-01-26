@@ -15,13 +15,13 @@ export class GenshinService {
     }
 
     async checkInByUser(discordId) {
-        const targetUser = this.userRepository.getUserById(discordId)
+        const targetUser = await this.userRepository.getUserById(discordId)
         const response = await this.hoyoRepository.checkIn(targetUser.cookies)
         return { targetUser, response }
     }
 
     async redeemCode(code, discordId) { 
-        const targetUser = this.userRepository.getUserById(discordId)
+        const targetUser = await this.userRepository.getUserById(discordId)
         const response = await this.hoyoRepository.redeemCode(code, targetUser)
         return { targetUser, response }
     }

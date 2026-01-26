@@ -1,3 +1,5 @@
+import { UserGameRecord } from "./UserGameRecord"
+
 export class UserModel {
     constructor({
         discordId = "", 
@@ -34,5 +36,19 @@ export class UserModel {
 
     getServerRegion() { 
         return this.userGameRecord.region
+    }
+
+    static fromDatabase(userData) { 
+        const userGameRecord = new UserGameRecord({
+            gameId: userData.game_id,
+            gameRoleId: userData.game_role_id,
+            nickname: userData.nickname,
+            region: userData.region
+        })
+        return new UserModel({
+            discordId: userData.discord_id,
+            cookies: userData.cookie,
+            userGameRecord: userGameRecord
+        })
     }
 }

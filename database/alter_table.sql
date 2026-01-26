@@ -1,0 +1,1 @@
+ALTER TABLE user_table MODIFY COLUMN cookie TEXT
