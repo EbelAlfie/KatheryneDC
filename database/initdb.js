@@ -2,9 +2,12 @@ import mysql from 'mysql2/promise';
 import 'dotenv/config';
 import { env } from "node:process";
 import { DBConfig } from '../data/source/DBConfig.js';
+import { Local } from '../data/source/local.js';
 
 class Database { 
     dbConnection
+
+    localApi = new Local()
 
     constructor() { 
         this.initConnection()
@@ -36,25 +39,30 @@ class Database {
         await this.dbConnection.query(`USE hoyo`)
     }
 
+    async drop() { 
+        await this.dbConnection.query(`DROP TABLE ${DBConfig.TaskTable}`)
+        await this.dbConnection.query(`DROP TABLE ${DBConfig.UserTable}`)
+    }
+
     async createTables() { 
         await this.dbConnection.query(`
             CREATE TABLE IF NOT EXISTS ${DBConfig.UserTable} (
                 user_id int PRIMARY KEY AUTO_INCREMENT,
-                discord_id varchar(100),
-                cookie varchar(255),
-                game_id int,
-                game_role_id varchar(100),
-                nickname varchar(255),
-                region varchar(30)
-            );
+                discord_id varchar(100) UNIQUE NOT NULL,
+                cookie text NOT NULL,
+                game_id int NOT NULL,
+                game_role_id varchar(100) NOT NULL,
+                nickname varchar(255) NOT NULL,
+                region varchar(30) NOT NULL
+            )
         `)
 
         await this.dbConnection.query(`
             CREATE TABLE IF NOT EXISTS ${DBConfig.TaskTable} (
                 id int PRIMARY KEY AUTO_INCREMENT,
-                user_id int,
-                task_type varchar(100),
-                schedule datetime,
+                user_id int NOT NULL,
+                task_type varchar(100) NOT NULL,
+                schedule datetime NOT NULL,
                 FOREIGN KEY (user_id) REFERENCES ${DBConfig.UserTable}(user_id)
             );
         `)
@@ -74,9 +82,28 @@ class Database {
     }
 
     async delete() {
-        await this.dbConnection.query(`DELETE FROM ${DBConfig.UserTable} WHERE discord_id = `)
+        await this.dbConnection.query(`DELETE FROM ${DBConfig.UserTable} WHERE discord_id = test`)
+    }
+
+    async insert() { 
+        let data = await this.dbConnection.query(`
+            INSERT INTO ${DBConfig.UserTable} (
+            discord_id, 
+            cookie, 
+            game_id, 
+            game_role_id, 
+            nickname,
+            region
+            ) VALUES ("testtt", "test", 2, "test", "test", "test")
+        `)
+        console.log(data)
+        let [result, _] = data
+        console.log(result.affectedRows)
     }
     
+    async perform() { 
+        localApi
+    }
 }
 
 new Database().delete()

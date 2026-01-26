@@ -23,7 +23,7 @@ export class RegisterCommand extends BaseCommand {
         .setDescription("Command to register your hoyolab cookie. Katheryne will send a DM")
 
     async execute(interaction)  {
-        const dm = interaction.user.createDM()
+        interaction.user.createDM()
         .then(result => {
             interaction.reply({ content: StringRes.message_checkdm, ephemeral: true })
             result.send({

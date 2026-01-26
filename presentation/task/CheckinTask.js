@@ -23,10 +23,10 @@ export class CheckInTask {
             const userModel = task.userModel
             const cookie = userModel.cookies ?? ""
             
-            this.taskRepository.removeTask(task)
+            await this.taskRepository.removeTask(task)
             const response = await this.hoyoRepository.checkIn(cookie)
 
-            this.taskRepository.addTask(
+            await this.taskRepository.addTask(
                 TaskModel.newTask(
                     userModel,
                     this.taskType,
@@ -43,7 +43,7 @@ export class CheckInTask {
     calculateNextExec() {
         const tomorrow = getTomorrow()
         tomorrow.setHours(1, 0, 0, 0)
-        return tomorrow.getTime()  
+        return tomorrow
     }
 
     async onOperationSuccess(userModel, client) { 
@@ -56,7 +56,7 @@ export class CheckInTask {
         const userModel = task.userModel
         const user = await getTargetUser(client, userModel.discordId)
         const userName = userModel.userGameRecord.nickname
-        let scheduleTime = Date.now()
+        let scheduleTime = new Date()
             switch(error.retcode) {
                 case HoyoResponseCode.AlreadyCheckIn:
                     scheduleTime = this.calculateNextExec()
@@ -66,10 +66,10 @@ export class CheckInTask {
                     sendDMMessage(user, StringRes.message_not_logged_in)
                     return
                 default:
-                    scheduleTime = Date.now()
+                    scheduleTime = new Date()
                     sendDMMessage(user, StringRes.message_failed_checkin(userName))
             }
-            this.taskRepository.addTask(
+            await this.taskRepository.addTask(
                 TaskModel.newTask(
                     userModel,
                     this.taskType,

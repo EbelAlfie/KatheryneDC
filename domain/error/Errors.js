@@ -39,3 +39,7 @@ export class UidNotFoundError extends BaseError {
 export class UserNotFoundError extends BaseError { 
     constructor(message) { super(StatusCodes.NotLoggedIn, message) }
 }
+
+export class InsertError extends BaseError { 
+    constructor(message) { super(StatusCodes.NotLoggedIn, message) }
+}

@@ -1,11 +1,14 @@
-import { UserGameRecord } from "./UserGameRecord"
+import { UserNotFoundError } from "../error/Errors.js"
+import { UserGameRecord } from "./UserGameRecord.js"
 
 export class UserModel {
     constructor({
+        userId,
         discordId = "", 
         cookies = "",
         userGameRecord
     }) { 
+        this.userId = userId
         this.discordId = discordId
         this.cookies = this.adjustCookie(cookies)
         this.userGameRecord = userGameRecord
@@ -39,6 +42,8 @@ export class UserModel {
     }
 
     static fromDatabase(userData) { 
+        if (!userData.user_id) throw UserNotFoundError("")
+
         const userGameRecord = new UserGameRecord({
             gameId: userData.game_id,
             gameRoleId: userData.game_role_id,
@@ -46,6 +51,7 @@ export class UserModel {
             region: userData.region
         })
         return new UserModel({
+            userId: userData.user_id,
             discordId: userData.discord_id,
             cookies: userData.cookie,
             userGameRecord: userGameRecord

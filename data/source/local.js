@@ -2,11 +2,11 @@ import { env } from 'node:process'
 import mysql from 'mysql2/promise';
 import { DBConfig } from './DBConfig.js';
 import { UserModel } from '../../domain/model/UserModel.js';
-import { UserNotFoundError } from '../../domain/error/Errors.js';
+import { InsertError, UserNotFoundError } from '../../domain/error/Errors.js';
+import { TaskModel } from '../../domain/model/Task.js';
 
 export class Local {
     dbConnection
-    task = []
 
     constructor() {
         this.initConnection()
@@ -42,10 +42,10 @@ export class Local {
         return userModel
     }
 
-    async storeUser(newUser) {
+    async storeUser({con = this.dbConnection, newUser}) {
         const userGameRecord = newUser.userGameRecord
         if (!userGameRecord) return 
-        let data = await this.dbConnection.query(`
+        let data = await con.query(`
             INSERT INTO ${DBConfig.UserTable} (
             discord_id, 
             cookie, 
@@ -64,26 +64,88 @@ export class Local {
             userGameRecord.region
         ]
         )
-        console.log(data)
+        let [result, _] = data
+        console.log(result.affectedRows)
+        return result.insertId
     }
 
-    addTask(newTask) { 
-        this.task.push(newTask)
+    async addTask({con= this.dbConnection, userId, newTask}) { 
+        
+        let data = await con.query(`
+            INSERT INTO ${DBConfig.TaskTable} (
+            user_id,
+            task_type,
+            schedule
+            ) VALUES (?, ?, ?)
+        `,
+        [
+            userId,
+            newTask.type,
+            newTask.date
+        ]
+        )
+        let [result, _] = data
+        return result.affectedRows
     }
 
-    removeTask(param) {
-        const { time = Date.now() } = param
-        this.task = this.task.filter((value) => value.date > time)
+    async removeTask(param) {
+        const { time = new Date() } = param
+        await this.dbConnection.query(`DELETE FROM ${DBConfig.TaskTable} WHERE schedule <= ?`, [time])
     }
 
-    getTask(param) {
-        const { by = Date.now() } = param
-        const selectedTasks = this.task.filter(value => value.date <= by)
-        console.log((new Date(by)).toLocaleString('id-ID'))
-        selectedTasks.forEach((value) => {
-            console.log(new Date(value.date).toLocaleString('id-ID'))
-            console.log(value.date === by)
-        })
-        return selectedTasks
+    async getTask(param) {
+        const { by = new Date() } = param
+
+        const [rows, _] = await this.dbConnection.query(`
+            SELECT 
+            user.user_id,
+            user.discord_id, 
+            user.cookie, 
+            user.game_id, 
+            user.game_role_id, 
+            user.nickname,
+            user.region,
+            task.task_type,
+            task.schedule
+            FROM ${DBConfig.TaskTable} task
+            INNER JOIN ${DBConfig.UserTable} user
+            ON task.user_id = user.user_id
+            WHERE task.schedule <= ?
+            ORDER BY task.schedule ASC`, 
+            [by]
+        )
+
+        let taskModel = rows.map(value => {
+            return TaskModel.fromDatabase(value)
+        }) 
+        return taskModel
+    }
+
+    async storeUserWithTask(user, tasks) { 
+        const connection = await this.dbConnection.getConnection()
+        try { 
+            await connection.beginTransaction()
+
+            const userId = await this.storeUser({
+                con: connection,
+                newUser: user
+            })
+            if (!userId) throw new InsertError("Insert user error")
+
+            for (const task of tasks) { 
+                const affectedRows = await this.addTask({
+                    con: connection,
+                    userId: userId,
+                    newTask: task
+                })
+                if (affectedRows <= 0) throw new InsertError("Insert task error")
+            }
+            await connection.commit()
+        } catch(error) { 
+            await connection.rollback()
+            throw new InsertError(error.message)
+        } finally {
+            connection.release()
+        }
     }
 }

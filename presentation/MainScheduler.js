@@ -32,7 +32,7 @@ export class MainScheduler {
 
         this.scheduler = nodeCron.schedule("0 * * * * *",
             async () => {
-                const dueTasks = this.taskRepository.getTask()
+                const dueTasks = await this.taskRepository.getTask()
                 console.log(`Due Task ${dueTasks}`)
                 dueTasks?.forEach(task => {
                     this.#processTask(task)

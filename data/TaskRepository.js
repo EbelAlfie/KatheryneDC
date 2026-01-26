@@ -6,15 +6,18 @@ export class TaskRepository {
         this.localApi = localApi
     }
 
-    addTask(newTask) { 
-        this.localApi.addTask(newTask)
+    async addTask(newTask) { 
+        await this.localApi.addTask({
+            userId: newTask.userModel.userId,
+            newTask: newTask
+        })
     }
 
-    removeTask() {
-        this.localApi.removeTask({ time: Date.now() })
+    async removeTask() {
+        await this.localApi.removeTask({ time: new Date() })
     }
 
-    getTask() {
-        return this.localApi.getTask({ by: Date.now() })
+    async getTask() {
+        return await this.localApi.getTask({ by: new Date() })
     }
 }

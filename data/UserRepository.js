@@ -1,7 +1,7 @@
 import { HoyoResponseCode } from "../domain/error/StatusCode.js"
 import { UserModel } from "../domain/model/UserModel.js"
 import { TaskModel, TaskType } from "../domain/model/Task.js"
-import { UserNotFoundError } from "../domain/error/Errors.js"
+import { InsertError, UserNotFoundError } from "../domain/error/Errors.js"
 
 export class UserRepository { 
     localApi
@@ -53,21 +53,17 @@ export class UserRepository {
             cookies: cookies,
             userGameRecord: userGameRecord
         })
-        const result = await this.localApi.storeUser(userModel)
-        console.log(`result ${result}`)
-        this.localApi.addTask(
+        await this.localApi.storeUserWithTask(userModel, [
             TaskModel.newTask(
                 userModel,
                 TaskType.CHECK_IN,
-                Date.now()
-            )
-        )
-        this.localApi.addTask(
+                new Date()
+            ),
             TaskModel.newTask(
                 userModel,
                 TaskType.DAILY,
-                Date.now()
+                new Date()
             )
-        )
+        ])
     }
 }

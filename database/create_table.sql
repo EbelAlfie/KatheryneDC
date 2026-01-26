@@ -1,16 +1,17 @@
-CREATE TABLE IF NOT EXIST user_table (
+CREATE TABLE IF NOT EXISTS user_table (
     user_id int PRIMARY KEY AUTO_INCREMENT,
-    discord_id varchar(100),
-    cookie text,
-    game_id int,
-    game_role_id varchar(100),
-    nickname varchar(255),
-    region varchar(30)
+    discord_id varchar(100) UNIQUE NOT NULL,
+    cookie text NOT NULL,
+    game_id int NOT NULL,
+    game_role_id varchar(100) NOT NULL,
+    nickname varchar(255) NOT NULL,
+    region varchar(30) NOT NULL
 )
 
-CREATE TABLE IF NOT EXIST task_table (
+CREATE TABLE IF NOT EXISTS task_table (
     id int PRIMARY KEY AUTO_INCREMENT,
-    user_id FOREIGN KEY REFERENCES user_db(user_id), 
-    task_type varchar(100),
-    schedule datetime
-)
+    user_id int NOT NULL,
+    task_type varchar(100) NOT NULL,
+    schedule datetime NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES user_table(user_id)
+);

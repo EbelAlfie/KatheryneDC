@@ -24,10 +24,10 @@ export class DailyTask {
 
             const notesResponse = await this.hoyoRepository.getDailyNote(userModel)
             
-            this.taskRepository.removeTask(task)
+            await this.taskRepository.removeTask(task)
 
             const newDate = this.calculateNextExec(notesResponse)
-            this.taskRepository.addTask(
+            await this.taskRepository.addTask(
                 TaskModel.newTask(
                     userModel, 
                     this.taskType,
@@ -42,7 +42,7 @@ export class DailyTask {
     }
 
     calculateNextExec(dailyNotes) {
-        return dailyNotes.estimateResinRecoverDate().getTime()
+        return dailyNotes.estimateResinRecoverDate()
     }
 
     async onOperationSuccess(dailyNote, userModel, client) { 
@@ -68,16 +68,16 @@ export class DailyTask {
         const user = await getTargetUser(client, userModel.discordId)
         const userName = userModel.userGameRecord.nickname
 
-        let scheduleTime = Date.now()
+        let scheduleTime = new Date()
         switch(error.retcode) {
             case StatusCodes.NotLoggedIn:
                 sendDMMessage(user, StringRes.message_not_logged_in)
                 return
             default:
                 sendDMMessage(user, error.message)
-                scheduleTime = Date.now()
+                scheduleTime = new Date()
         }
-        this.taskRepository.addTask(
+        await this.taskRepository.addTask(
             TaskModel.newTask(
                 task.userModel, 
                 this.taskType,
