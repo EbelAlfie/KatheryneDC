@@ -76,7 +76,7 @@ class Database {
 
     async queryTest() { 
         let data = await this.dbConnection.query(`
-            SELECT * FROM ${DBConfig.UserTable} 
+            SELECT * FROM ${DBConfig.TaskTable} 
         `, [new Date()])
         console.log(data)
     }

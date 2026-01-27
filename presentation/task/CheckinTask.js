@@ -25,15 +25,9 @@ export class CheckInTask {
             
             const response = await this.hoyoRepository.checkIn(cookie)
 
-            await this.taskRepository.removeTask(task)
+            const newDate = this.calculateNextExec()
 
-            await this.taskRepository.addTask(
-                TaskModel.newTask(
-                    userModel,
-                    this.taskType,
-                    this.calculateNextExec()
-                )
-            )
+            await this.taskRepository.reschedule(task.id, newDate)
 
             this.onOperationSuccess(userModel, client)
         } catch(error) {

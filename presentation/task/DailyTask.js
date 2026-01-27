@@ -26,15 +26,7 @@ export class DailyTask {
             
             const newDate = this.calculateNextExec(notesResponse)
 
-            await this.taskRepository.removeTask(task)
-
-            await this.taskRepository.addTask(
-                TaskModel.newTask(
-                    userModel, 
-                    this.taskType,
-                    newDate
-                )
-            )
+            await this.taskRepository.reschedule(task.id, newDate)
             
             this.onOperationSuccess(notesResponse, userModel, client)
         } catch (error) { 
@@ -57,8 +49,11 @@ export class DailyTask {
         if (resinUntilFull > threshold) { 
             message = StringRes.message_resin_empty(userName, currentResin)
         }
-        if (resinUntilFull < threshold) { 
+        if (resinUntilFull <= threshold) { 
             message = StringRes.message_resin_almost_full(userName, currentResin)
+        }
+        if (resinUntilFull === 0) { 
+            message = StringRes.message_resin_full(userName, currentResin)
         }
 
         sendDMMessage(user, message)
