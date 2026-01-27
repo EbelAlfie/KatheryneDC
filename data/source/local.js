@@ -127,7 +127,7 @@ export class Local {
         const { taskId, newDate = new Date() } = param
 
         let [data, _] = await this.dbConnection.query(`
-            UPDATE TABLE ${DBConfig.TaskTable}
+            UPDATE ${DBConfig.TaskTable}
             SET schedule = ?
             WHERE id = ?
         `, [newDate, taskId])
