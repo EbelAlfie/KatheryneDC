@@ -23,8 +23,9 @@ export class CheckInTask {
             const userModel = task.userModel
             const cookie = userModel.cookies ?? ""
             
-            await this.taskRepository.removeTask(task)
             const response = await this.hoyoRepository.checkIn(cookie)
+
+            await this.taskRepository.removeTask(task)
 
             await this.taskRepository.addTask(
                 TaskModel.newTask(
@@ -69,12 +70,6 @@ export class CheckInTask {
                     scheduleTime = new Date()
                     sendDMMessage(user, StringRes.message_failed_checkin(userName))
             }
-            await this.taskRepository.addTask(
-                TaskModel.newTask(
-                    userModel,
-                    this.taskType,
-                    scheduleTime
-                )
-            )
+            await this.taskRepository.reschedule(task.id, scheduleTime)
     }
 }

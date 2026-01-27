@@ -14,10 +14,9 @@ export class UserModel {
         this.userGameRecord = userGameRecord
     }
 
-
     adjustCookie(cookie) { 
         const key = "account_mid_v2"
-        if (this.getField(key, cookie) !== "") return 
+        if (this.getField(key, cookie) !== "") return cookie
         let mid = this.getField("ltmid_v2", cookie)
         return cookie + `${key}=${mid};`
     }

@@ -41,6 +41,7 @@ export class HoyolabRepository {
             let response = await this.apiClient.checkIn(cookie)
             return response
         } catch(error) {
+            console.log(`checkin error ${error}`)
             throw BaseError.fromErrorResponse(error)
         }
     }
@@ -78,6 +79,7 @@ export class HoyolabRepository {
             let response = await this.apiClient.getDailyNote(requestModel, cookies)
             return DailyNote.fromResponse(response)
         } catch(error) {
+            console.log(`Daily error ${error}`)
             throw BaseError.fromErrorResponse(error)
         }
     }

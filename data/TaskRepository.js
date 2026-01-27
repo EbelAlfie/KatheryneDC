@@ -13,6 +13,13 @@ export class TaskRepository {
         })
     }
 
+    async reschedule(taskId, newDate) { 
+        await this.localApi.rescheduleTask({
+            taskId: taskId,
+            newDate: newDate
+        })
+    }
+
     async removeTask() {
         await this.localApi.removeTask({ time: new Date() })
     }

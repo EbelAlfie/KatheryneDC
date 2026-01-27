@@ -7,7 +7,8 @@ export const TaskType = Object.freeze({
 })
 
 export class TaskModel {
-    constructor({userModel, type, date}) {
+    constructor({id, userModel, type, date}) {
+        this.id = id
         this.userModel = userModel
         this.type = type
         this.date = date
@@ -31,10 +32,11 @@ export class TaskModel {
         const userModel = new UserModel({
             userId: taskData.user_id,
             discordId: taskData.discord_id,
-            cookies: taskData.cookies,
+            cookies: taskData.cookie,
             userGameRecord: userGameRecord
         })
         return new TaskModel({
+            id: taskData.id,
             userModel: userModel,
             type: taskData.task_type,
             date: taskData.schedule

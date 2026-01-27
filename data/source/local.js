@@ -105,6 +105,7 @@ export class Local {
             user.game_role_id, 
             user.nickname,
             user.region,
+            task.id,
             task.task_type,
             task.schedule
             FROM ${DBConfig.TaskTable} task
@@ -116,9 +117,22 @@ export class Local {
         )
 
         let taskModel = rows.map(value => {
+            console.log(value)
             return TaskModel.fromDatabase(value)
         }) 
         return taskModel
+    }
+
+    async rescheduleTask(param) { 
+        const { taskId, newDate = new Date() } = param
+
+        let [data, _] = await this.dbConnection.query(`
+            UPDATE TABLE ${DBConfig.TaskTable}
+            SET schedule = ?
+            WHERE id = ?
+        `, [newDate, taskId])
+
+        console.log(`UPDATE ${data}`)
     }
 
     async storeUserWithTask(user, tasks) { 

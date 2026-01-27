@@ -76,13 +76,14 @@ class Database {
 
     async queryTest() { 
         let data = await this.dbConnection.query(`
-            SELECT * FROM ${DBConfig.UserTable} WHERE discord_id = 
-        `)
+            SELECT * FROM ${DBConfig.UserTable} 
+        `, [new Date()])
         console.log(data)
     }
 
-    async delete() {
-        await this.dbConnection.query(`DELETE FROM ${DBConfig.UserTable} WHERE discord_id = test`)
+    async deleteAll() { 
+        await this.dbConnection.query(`DELETE FROM ${DBConfig.TaskTable}`)
+        await this.dbConnection.query(`DELETE FROM ${DBConfig.UserTable}`)
     }
 
     async insert() { 
@@ -100,10 +101,6 @@ class Database {
         let [result, _] = data
         console.log(result.affectedRows)
     }
-    
-    async perform() { 
-        localApi
-    }
 }
 
-new Database().delete()
+new Database().deleteAll()

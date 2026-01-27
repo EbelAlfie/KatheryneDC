@@ -24,9 +24,10 @@ export class DailyTask {
 
             const notesResponse = await this.hoyoRepository.getDailyNote(userModel)
             
+            const newDate = this.calculateNextExec(notesResponse)
+
             await this.taskRepository.removeTask(task)
 
-            const newDate = this.calculateNextExec(notesResponse)
             await this.taskRepository.addTask(
                 TaskModel.newTask(
                     userModel, 
@@ -77,12 +78,6 @@ export class DailyTask {
                 sendDMMessage(user, error.message)
                 scheduleTime = new Date()
         }
-        await this.taskRepository.addTask(
-            TaskModel.newTask(
-                task.userModel, 
-                this.taskType,
-                scheduleTime
-            )
-        )
+        await this.taskRepository.reschedule(task.id, scheduleTime)
     }
 }
