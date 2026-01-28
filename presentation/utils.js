@@ -23,7 +23,7 @@ export async function getTargetUser(client, discordId) {
 }
 
 export async function sendDMMessage(user, message) { 
-    try { 
+    try {
         await user.send(message)
     } catch(error) { 
         console.warn(`DM failed ${user.id}:`, error.code || error.message)

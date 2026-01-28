@@ -21,6 +21,7 @@ client.once(Events.ClientReady, () => {
 }) ;
 
 client.on(Events.MessageCreate, interaction => {
+    console.log(interaction.channelId)
     ayaka.reply(interaction)
 }) ;
 

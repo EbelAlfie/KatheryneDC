@@ -27,19 +27,38 @@ export const StringRes = {
 
     message_resin_empty: (user, resin) => clean(`
     Ad astra abyssosque, ${user}!
-    Total resin: ${resin}
-    Great job 👏
+    ✅ Great job 👏
+    ✨ Total resin: ${resin}
     `),
     message_resin_almost_full: (user, resin) => clean(`
     Ad astra abyssosque, ${user}! 
-    Your resin is almost full
-    Total resin: ${resin}
+    ⚠️ Your resin is almost full
+    ✨ Total resin: ${resin}
     `),
     message_resin_full: (user, resin) => clean(`
     Ad astra abyssosque, ${user}! 
-    Your resin is already full
-    Total resin: ${resin}
+    ‼️ Your resin is already full
+    ✨ Total resin: ${resin}
     `),
+    message_teapot_empty: (coin) => clean(`
+    ✅ Nothing to extract from Jar of Riches 
+    🪙 Realm Currency: ${coin}
+    `),
+    message_teapot_almost_full: (coin) => clean(`
+    ⚠️ Quick! Harvest the Jar of Riches!
+    🪙 Realm Currency: ${coin}
+    `),
+    message_teapot_full: (coin) => clean(`
+    ‼️ The Jar of Riches is overflowing!
+    🪙 Realm Currency: ${coin}
+    `),
+    message_commision_warning: (num) => clean(`
+    ⚔ ${num} commision left, don't forget to do them!
+    `),
+    message_claim_reward: (user) =>
+      `⚔ You haven't claim your commision reward yet, ${user}`
+    ,
+    message_no_expeditions: "No ongoing expeditions",
     message_invalid_redeem_code: "It seems like the redeem code inputed is invalid",
     message_code_redeemed: (user) => `Dear ${user}, code successfully redeemed! Claim them before it expires~`
 }

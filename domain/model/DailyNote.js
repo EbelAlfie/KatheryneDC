@@ -10,6 +10,7 @@ export class DailyNote {
         resinDiscountNumLimit,
         currentExpeditionNum,
         maxExpeditionNum,
+        expeditions,
         currentHomeCoin,
         maxHomeCoin,
         homeCoinRecoverTime
@@ -24,6 +25,7 @@ export class DailyNote {
         this.resinDiscountNumLimit = resinDiscountNumLimit ?? 3
         this.currentExpeditionNum = currentExpeditionNum ?? 0
         this.maxExpeditionNum = maxExpeditionNum ?? 5
+        this.expeditions = expeditions ?? []
 
         this.currentHomeCoin = currentHomeCoin ?? 0
         this.maxHomeCoin = maxHomeCoin ?? 2400
@@ -88,6 +90,7 @@ export class DailyNote {
                 resinDiscountNumLimit: body?.resin_discount_num_limit,
                 currentExpeditionNum: body?.current_expedition_num,
                 maxExpeditionNum: body?.max_expedition_num,
+                expeditions: body?.expeditions,
                 currentHomeCoin: body?.current_home_coin,
                 maxHomeCoin: body?.max_home_coin,
                 homeCoinRecoverTime: body?.home_coin_recovery_time
