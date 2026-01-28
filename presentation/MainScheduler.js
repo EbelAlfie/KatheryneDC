@@ -53,9 +53,6 @@ export class MainScheduler {
     }
 
     stopReminder() {
-        if (!this.scheduler) return
-        clearInterval(this.scheduler)
-        this.scheduler = null
     }
 
     // True if it has user, false if user is empty

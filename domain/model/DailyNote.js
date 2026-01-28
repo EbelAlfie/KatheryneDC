@@ -52,6 +52,28 @@ export class DailyNote {
         return now
     }
 
+    estimateTeapotCoinFull() {
+        const now = new Date()
+        const coinLeft = this.maxHomeCoin - this.currentHomeCoin
+        if (coinLeft <= 0) {
+            now.setHours(now.getHours() + 2)
+            return now
+        }
+        const secondsPerResin = this.homeCoinRecoverTime / coinLeft
+
+        const threshold = 2000 
+
+        const resinThreshold = threshold - this.currentHomeCoin
+
+        if (resinThreshold <= 0) {
+            now.setSeconds(now.getSeconds() + this.homeCoinRecoverTime)
+        } else { 
+            const timeNeeded = resinThreshold * secondsPerResin
+            now.setSeconds(now.getSeconds() + timeNeeded)
+        }
+        return now
+    }
+
     static fromResponse(rawResponse) {
         let body = rawResponse.data ?? null
         return new DailyNote(
